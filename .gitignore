@@ -43,7 +43,6 @@ sift/recorder/sift_recorder
 tools/pinversion
 
 # result files
-results/
 !results/.DO_NOT_DELETE
 
 # dependencies
