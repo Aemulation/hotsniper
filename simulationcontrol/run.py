@@ -63,8 +63,8 @@ def save_output(
     benchmark_text = benchmark
     if len(benchmark_text) > 100:
         benchmark_text = benchmark_text[:100] + "__etc"
-    run = "results_{}_{}_{}".format(
-        BATCH_START, "+".join(base_configuration), benchmark_text
+    run = "results_{}_{}".format(
+        "+".join(base_configuration), benchmark_text
     )
     directory = os.path.join(RESULTS_FOLDER, run)
     if not os.path.exists(directory):
@@ -104,6 +104,17 @@ def save_output(
 
 
 def run(base_configuration, benchmark, ignore_error=False):
+    benchmark_text = benchmark
+    if len(benchmark_text) > 100:
+        benchmark_text = benchmark_text[:100] + "__etc"
+    run = "results_{}_{}".format(
+        "+".join(base_configuration), benchmark_text
+    ) 
+
+    if os.path.exists(os.path.join(RESULTS_FOLDER, run)):
+        print("Skipping {}, already exists.".format(run))
+        return
+    
     print(
         "running {} with configuration {}".format(
             benchmark, "+".join(base_configuration)
