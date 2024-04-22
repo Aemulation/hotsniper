@@ -16,6 +16,22 @@ def filter_from_run(run: str):
     return parts[1]
 
 
+def clockspeed_from_filter(filter: str):
+    def first_float_in_str_to_float(input):
+        for i in range(len(input)):
+            sub_string = input[: len(input) - i]
+
+            try:
+                result = float(sub_string)
+                return result
+            except ValueError:
+                pass
+
+        return None
+
+    return first_float_in_str_to_float(filter)
+
+
 def parse_results_impl():
     headers = [
         "name",
@@ -23,6 +39,7 @@ def parse_results_impl():
         "config",
         "tasks",
         "cores",
+        "clockspeed",
         "sim. time (ns)",
         "avg resp time (ns)",
         "resp times (ns)",
@@ -58,6 +75,8 @@ def parse_results_impl():
         name = name_from_config(config)
         filter = filter_from_run(run)
 
+        clockspeed = clockspeed_from_filter(filter)
+
         num_cores_index = run[-1]
         num_cores = threads[name][int(num_cores_index) - 1]
         average_peak_temperature = get_average_peak_temperature(run)
@@ -74,6 +93,7 @@ def parse_results_impl():
                 config,
                 tasks,
                 int(num_cores),
+                clockspeed,
                 int(get_total_simulation_time(run)),
                 get_average_response_time(run),
                 int(get_individual_response_times(run)[0]),
