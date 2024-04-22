@@ -10,7 +10,7 @@ except ImportError:
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RESULT_DIRS = [RESULTS_FOLDER]
-NAME_REGEX = r'results_(\d+-\d+-\d+_\d+.\d+)_([a-zA-Z0-9_\.\+]+)_((splash2|parsec)-.*)'
+NAME_REGEX = r'results_([a-zA-Z0-9_\.\+]+)_((splash2|parsec)-.*)'
 
 print(NAME_REGEX)
 

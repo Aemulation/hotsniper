@@ -404,26 +404,122 @@ def multi_threading_test():
         min_parallelism = get_feasible_parallelisms(benchmark)[0]
         max_parallelism = get_feasible_parallelisms(benchmark)[-1]
         for cores in [1, 2, 3, 4]:
-            for freq in (1, 2):
-                for parallelism in range(1, cores + 1):
-                    try:
-                        run(
-                            ["{:.1f}GHz".format(freq), "maxFreq", "slowDVFS"],
-                            get_instance(benchmark, parallelism, input_set="simsmall"),
-                        )
-                    except Infeasible:
-                        print('Big L')
+            for freq in (1, 2, 3, 4):
+                try:
+                    run(
+                        ["{:.1f}GHz".format(freq), "maxFreq", "slowDVFS"],
+                        get_instance(benchmark, cores, input_set="simsmall"),
+                    )
+                except Infeasible:
+                    print('Big L')
 
 
 
+def migration_test():
+    for benchmark in (
+        "parsec-blackscholes",
+        'parsec-bodytrack',
+        'parsec-canneal',
+        'parsec-dedup',
+        'parsec-fluidanimate',
+        'parsec-streamcluster',
+        'parsec-swaptions',
+        'parsec-x264',
+        #'splash2-barnes',
+        #'splash2-fmm',
+        #'splash2-ocean.cont',
+        #'splash2-ocean.ncont',
+        #'splash2-radiosity',
+        #'splash2-raytrace',
+        #'splash2-water.nsq',
+        #'splash2-water.sp',
+        #'splash2-cholesky',
+        #'splash2-fft',
+        #'splash2-lu.cont',
+        #'splash2-lu.ncont',
+        #'splash2-radix',
+    ):
+        min_parallelism = get_feasible_parallelisms(benchmark)[0]
+        max_parallelism = get_feasible_parallelisms(benchmark)[-1]
+        for cores in [1, 2, 3, 4]:
+            for freq in (1, 2, 3, 4):
+                try:
+                    run(
+                        ["{:.1f}GHz".format(freq), "maxFreq", "slowDVFS", "coldestCore"],
+                        get_instance(benchmark, cores, input_set="simsmall"),
+                    )
+                except Infeasible:
+                    print('Big L')
 
+
+def multi_program_test():
+        for benchmark in (
+        "parsec-blackscholes",
+        'parsec-bodytrack',
+        'parsec-canneal',
+        'parsec-dedup',
+        'parsec-fluidanimate',
+        'parsec-streamcluster',
+        'parsec-swaptions',
+        'parsec-x264',
+        #'splash2-barnes',
+        #'splash2-fmm',
+        #'splash2-ocean.cont',
+        #'splash2-ocean.ncont',
+        #'splash2-radiosity',
+        #'splash2-raytrace',
+        #'splash2-water.nsq',
+        #'splash2-water.sp',
+        #'splash2-cholesky',
+        #'splash2-fft',
+        #'splash2-lu.cont',
+        #'splash2-lu.ncont',
+        #'splash2-radix',
+    ):
+        min_parallelism = get_feasible_parallelisms(benchmark)[0]
+        max_parallelism = get_feasible_parallelisms(benchmark)[-1]
+        for cores in [1, 2, 3, 4]:
+            for freq in (1, 2, 3, 4):
+                try:
+                    run(
+                        ["{:.1f}GHz".format(freq), "maxFreq", "slowDVFS"],
+                        get_instance(benchmark, cores, input_set="simsmall"),
+                    )
+    # In this example, two instances of blackscholes will be scheduled.
+    # By setting the scheduler/open/arrivalRate base.cfg parameter to 2, the
+    # tasks can be set to arrive at the same time.
+
+    input_set = "simsmall"
+    base_configuration = ["4.0GHz", "maxFreq"]
+    benchmark_set = (
+        "parsec-blackscholes",
+        "parsec-x264",
+    )
+
+    if ENABLE_HEARTBEATS == True:
+        base_configuration.append("hb_enabled")
+
+    benchmarks = ""
+    for i, benchmark in enumerate(benchmark_set):
+        min_parallelism = get_feasible_parallelisms(benchmark)[0]
+        if i != 0:
+            benchmarks = (
+                benchmarks + "," + get_instance(benchmark, min_parallelism, input_set)
+            )
+        else:
+            benchmarks = benchmarks + get_instance(
+                benchmark, min_parallelism, input_set
+            )
+
+    run(base_configuration, benchmarks)
 
 def main():
     # example()
     # ondemand_demo()
     # test_static_power()
     # multi_program()
-    multi_threading_test()
+    # multi_threading_test()
+    migration_test()
 
 
 if __name__ == "__main__":
