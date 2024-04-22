@@ -7,7 +7,7 @@ from run import get_threads
 def name_from_config(config: str):
     parts = config.split("-")
 
-    return f"{parts[0]}-{parts[1]}"
+    return "{}-{}".format(parts[0], parts[1])
 
 
 def filter_from_run(run: str):
