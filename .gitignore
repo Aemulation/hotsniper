@@ -12,14 +12,6 @@
 
 # test output
 *.log
-sim.out
-sim.cfg
-sim.info
-sim.stats
-sim.stats.base
-sim.stats.delta
-sim.stats.db
-sim.stats.sqlite3
 appdebug_port.out
 debug_offset.out
 graphite.out
