@@ -29,6 +29,7 @@ def parse_results_impl():
         "peak power / thread (W)",
         "avg power (W)",
         "energy (J)",
+        "peak temperature (°C)",
     ]
     threads = get_threads()
 
@@ -55,6 +56,7 @@ def parse_results_impl():
 
         num_cores_index = run[-1]
         num_cores = threads[name][int(num_cores_index) - 1]
+        average_peak_temperature = get_average_peak_temperature(run)
 
         rows.append(
             [
@@ -69,6 +71,7 @@ def parse_results_impl():
                 "{:.2f}".format(get_peak_power_consumption_single_thread(run)),
                 "{:.2f}".format(get_average_power_consumption(run)),
                 "{:.2f}".format(energy) if energy != "-" else "-",
+                average_peak_temperature,
             ]
         )
 
