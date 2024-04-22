@@ -63,9 +63,7 @@ def save_output(
     benchmark_text = benchmark
     if len(benchmark_text) > 100:
         benchmark_text = benchmark_text[:100] + "__etc"
-    run = "results_{}_{}".format(
-        "+".join(base_configuration), benchmark_text
-    )
+    run = "results_{}_{}".format("+".join(base_configuration), benchmark_text)
     directory = os.path.join(RESULTS_FOLDER, run)
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -107,14 +105,12 @@ def run(base_configuration, benchmark, ignore_error=False):
     benchmark_text = benchmark
     if len(benchmark_text) > 100:
         benchmark_text = benchmark_text[:100] + "__etc"
-    run = "results_{}_{}".format(
-        "+".join(base_configuration), benchmark_text
-    ) 
+    run = "results_{}_{}".format("+".join(base_configuration), benchmark_text)
 
     if os.path.exists(os.path.join(RESULTS_FOLDER, run)):
         print("Skipping {}, already exists.".format(run))
         return
-    
+
     print(
         "running {} with configuration {}".format(
             benchmark, "+".join(base_configuration)
@@ -199,7 +195,7 @@ class Infeasible(Exception):
     pass
 
 
-def get_instance(benchmark, parallelism, input_set="small"):
+def get_threads():
     threads = {
         "parsec-blackscholes": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
         "parsec-bodytrack": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
@@ -240,6 +236,12 @@ def get_instance(benchmark, parallelism, input_set="small"):
             16,
         ],  # other parallelism values run but are suboptimal -> don't allow in the first place
     }
+
+    return threads
+
+
+def get_instance(benchmark, parallelism, input_set="small"):
+    threads = get_threads()
 
     ps = threads[benchmark]
     if parallelism <= 0 or parallelism not in ps:
@@ -298,13 +300,13 @@ def get_workload(
 def example():
     for benchmark in (
         "parsec-blackscholes",
-        'parsec-bodytrack',
-        'parsec-canneal',
-        'parsec-dedup',
-        'parsec-fluidanimate',
-        'parsec-streamcluster',
-        'parsec-swaptions',
-        'parsec-x264',
+        "parsec-bodytrack",
+        "parsec-canneal",
+        "parsec-dedup",
+        "parsec-fluidanimate",
+        "parsec-streamcluster",
+        "parsec-swaptions",
+        "parsec-x264",
         #'splash2-barnes',
         #'splash2-fmm',
         #'splash2-ocean.cont',
@@ -375,18 +377,16 @@ def ondemand_demo():
     )
 
 
-
-
 def multi_threading_test():
     for benchmark in (
         "parsec-blackscholes",
-        'parsec-bodytrack',
-        'parsec-canneal',
-        'parsec-dedup',
-        'parsec-fluidanimate',
-        'parsec-streamcluster',
-        'parsec-swaptions',
-        'parsec-x264',
+        "parsec-bodytrack",
+        "parsec-canneal",
+        "parsec-dedup",
+        "parsec-fluidanimate",
+        "parsec-streamcluster",
+        "parsec-swaptions",
+        "parsec-x264",
         #'splash2-barnes',
         #'splash2-fmm',
         #'splash2-ocean.cont',
@@ -411,20 +411,19 @@ def multi_threading_test():
                         get_instance(benchmark, cores, input_set="simsmall"),
                     )
                 except Infeasible:
-                    print('Big L')
-
+                    print("Big L")
 
 
 def migration_test():
     for benchmark in (
         "parsec-blackscholes",
-        'parsec-bodytrack',
-        'parsec-canneal',
-        'parsec-dedup',
-        'parsec-fluidanimate',
-        'parsec-streamcluster',
-        'parsec-swaptions',
-        'parsec-x264',
+        "parsec-bodytrack",
+        "parsec-canneal",
+        "parsec-dedup",
+        "parsec-fluidanimate",
+        "parsec-streamcluster",
+        "parsec-swaptions",
+        "parsec-x264",
         #'splash2-barnes',
         #'splash2-fmm',
         #'splash2-ocean.cont',
@@ -445,23 +444,28 @@ def migration_test():
             for freq in (1, 2, 3, 4):
                 try:
                     run(
-                        ["{:.1f}GHz".format(freq), "maxFreq", "slowDVFS", "coldestCore"],
+                        [
+                            "{:.1f}GHz".format(freq),
+                            "maxFreq",
+                            "slowDVFS",
+                            "coldestCore",
+                        ],
                         get_instance(benchmark, cores, input_set="simsmall"),
                     )
                 except Infeasible:
-                    print('Big L')
+                    print("Big L")
 
 
 def multi_program_test():
-        for benchmark in (
+    for benchmark in (
         "parsec-blackscholes",
-        'parsec-bodytrack',
-        'parsec-canneal',
-        'parsec-dedup',
-        'parsec-fluidanimate',
-        'parsec-streamcluster',
-        'parsec-swaptions',
-        'parsec-x264',
+        "parsec-bodytrack",
+        "parsec-canneal",
+        "parsec-dedup",
+        "parsec-fluidanimate",
+        "parsec-streamcluster",
+        "parsec-swaptions",
+        "parsec-x264",
         #'splash2-barnes',
         #'splash2-fmm',
         #'splash2-ocean.cont',
@@ -485,6 +489,8 @@ def multi_program_test():
                         ["{:.1f}GHz".format(freq), "maxFreq", "slowDVFS"],
                         get_instance(benchmark, cores, input_set="simsmall"),
                     )
+                finally:
+                    pass
     # In this example, two instances of blackscholes will be scheduled.
     # By setting the scheduler/open/arrivalRate base.cfg parameter to 2, the
     # tasks can be set to arrive at the same time.
@@ -512,6 +518,7 @@ def multi_program_test():
             )
 
     run(base_configuration, benchmarks)
+
 
 def main():
     # example()
