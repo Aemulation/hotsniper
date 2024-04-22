@@ -15,6 +15,7 @@
 #include "policies/dvfsMaxFreq.h"
 #include "policies/dvfsOndemand.h"
 #include "policies/dvfsTestStaticPower.h"
+#include "policies/dvfsAsymmetric.h"
 #include "policies/mapFirstUnused.h"
 
 #include <bits/stdc++.h>
@@ -363,6 +364,10 @@ void SchedulerOpen::initDVFSPolicy(String policyName) {
         performanceCounters, coreRows, coreColumns, minFrequency, maxFrequency,
         frequencyStepSize, upThreshold, downThreshold, dtmCriticalTemperature,
         dtmRecoveredTemperature);
+  } else if(policyName == "asymmetric") {
+    std::cout << "Created asymmetric dvfs policy" << std::endl;
+    dvfsPolicy = new DVFSAsymmetric(performanceCounters, coreRows, coreColumns,
+                                    minFrequency, maxFrequency, frequencyStepSize, Sim()->getCfg()->getString("scheduler/open/dvfs/asymmetry"));
   } else {
     cout << "\n[Scheduler] [Error]: Unknown DVFS Algorithm" << endl;
     exit(1);
