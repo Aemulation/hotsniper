@@ -42,7 +42,6 @@ def parse_results_impl():
         "clockspeed",
         "sim. time (ns)",
         "avg resp time (ns)",
-        "resp times (ns)",
         "peak power / thread (W)",
         "avg power (W)",
         "energy (J)",
@@ -81,11 +80,6 @@ def parse_results_impl():
         num_cores = threads[name][int(num_cores_index) - 1]
         average_peak_temperature = get_average_peak_temperature(run)
 
-        if len(get_individual_response_times(run)) != 1:
-            raise NotImplementedError(
-                "use a more advanced way to get the response time"
-            )
-
         rows.append(
             [
                 name,
@@ -96,7 +90,6 @@ def parse_results_impl():
                 clockspeed,
                 int(get_total_simulation_time(run)),
                 get_average_response_time(run),
-                int(get_individual_response_times(run)[0]),
                 float(get_peak_power_consumption_single_thread(run)),
                 float(get_average_power_consumption(run)),
                 energy,
