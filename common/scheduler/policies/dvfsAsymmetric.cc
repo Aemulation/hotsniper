@@ -32,15 +32,12 @@ std::vector<int> DVFSAsymmetric::getFrequencies(const std::vector<int> &oldFrequ
         // }
 
         if(asymmetry == "master"){
-            std::cout << "Master gets fucked" << std::endl;
             frequencies.at(0) = minFrequency;
 
             for(int i = 1; i < coreRows * coreColumns; i++) {
                 frequencies.at(i) = maxFrequency;
             }
         } else if(asymmetry == "slave"){
-            std::cout << "Slave gets fucked" << std::endl;
-
             frequencies.at(0) = maxFrequency;
 
             for(int i = 1; i < coreRows * coreColumns; i++) {

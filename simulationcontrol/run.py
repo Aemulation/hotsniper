@@ -443,7 +443,7 @@ def dvfs_test():
         
         for target in ["Master", "Slave"]:
             for cores in [2, 3, 4]:
-                for freq in (1, 2, 3, 4):
+                for freq in (2, 3, 4):
                     try:
                         run(
                             ["{:.1f}GHz".format(freq), "asymmetric", "asymmetry{}".format(target), "slowDVFS"],
@@ -577,10 +577,10 @@ def main():
     # ondemand_demo()
     # test_static_power()
     # multi_program()
-    # multi_threading_test()
+    multi_threading_test()
     # migration_test()
-    # multi_program_test()
-    dvfs_test()
+    multi_program_test()
+    # dvfs_test()
 
 
 if __name__ == "__main__":
