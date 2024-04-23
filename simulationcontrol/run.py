@@ -153,7 +153,7 @@ def run(base_configuration, benchmark, ignore_error=False):
     )
     with p.stdout:
         for line in iter(p.stdout.readline, b""):
-            linestr = line.decode("utf-8")
+            linestr = line.decode("utf-8").replace("\xb0", "")
             console_output += linestr
             print(linestr, end="")
     p.wait()
@@ -441,12 +441,12 @@ def dvfs_test():
         min_parallelism = get_feasible_parallelisms(benchmark)[0]
         max_parallelism = get_feasible_parallelisms(benchmark)[-1]
         
-        for target in ["master", "slave"]:
-            for cores in [1, 2, 3, 4]:
+        for target in ["Master", "Slave"]:
+            for cores in [2, 3, 4]:
                 for freq in (1, 2, 3, 4):
                     try:
                         run(
-                            ["{:.1f}GHz".format(freq), "asymmetric", "asymmetry-{}".format(target), "slowDVFS"],
+                            ["{:.1f}GHz".format(freq), "asymmetric", "asymmetry{}".format(target), "slowDVFS"],
                             get_instance(benchmark, cores, input_set="simsmall"),
                         )
                     except Infeasible:
@@ -577,9 +577,9 @@ def main():
     # ondemand_demo()
     # test_static_power()
     # multi_program()
-    multi_threading_test()
+    # multi_threading_test()
     # migration_test()
-    multi_program_test()
+    # multi_program_test()
     dvfs_test()
 
 

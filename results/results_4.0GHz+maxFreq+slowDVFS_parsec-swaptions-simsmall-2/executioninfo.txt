@@ -1,0 +1,5 @@
+started:    2024-04-23 09:27:26
+ended:      2024-04-23 09:39:27
+duration:   0:12:00.979087
+host:       50cab10fbbab
+tasks:      parsec-swaptions-simsmall-2
