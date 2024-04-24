@@ -416,14 +416,14 @@ def multi_threading_test():
 
 def dvfs_symmetric_slow_test():
     for benchmark in (
-        "parsec-blackscholes",
+        #"parsec-blackscholes",
         "parsec-bodytrack",
         "parsec-canneal",
         "parsec-dedup",
-        "parsec-fluidanimate",
-        "parsec-streamcluster",
-        "parsec-swaptions",
-        "parsec-x264",
+        #"parsec-fluidanimate",
+        #"parsec-streamcluster",
+        #"parsec-swaptions",
+        #"parsec-x264",
         #'splash2-barnes',
         #'splash2-fmm',
         #'splash2-ocean.cont',
@@ -658,7 +658,7 @@ def main():
     # migration_test()
     # multi_program_test()
     # dvfs_test()
-    dvfs_symmetric_fast_test()
+    #dvfs_symmetric_fast_test()
     dvfs_symmetric_slow_test()
 
 
