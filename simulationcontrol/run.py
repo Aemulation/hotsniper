@@ -379,6 +379,7 @@ def ondemand_demo():
 
 def multi_threading_test():
     for benchmark in (
+        "parsec-x264",
         "parsec-blackscholes",
         "parsec-bodytrack",
         "parsec-canneal",
@@ -386,7 +387,6 @@ def multi_threading_test():
         "parsec-fluidanimate",
         "parsec-streamcluster",
         "parsec-swaptions",
-        "parsec-x264",
         #'splash2-barnes',
         #'splash2-fmm',
         #'splash2-ocean.cont',
@@ -654,7 +654,7 @@ def main():
     # ondemand_demo()
     # test_static_power()
     # multi_program()
-    # multi_threading_test()
+    multi_threading_test()
     # migration_test()
     # multi_program_test()
     # dvfs_test()

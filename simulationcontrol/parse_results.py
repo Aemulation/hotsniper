@@ -45,7 +45,7 @@ def parse_results_impl():
         "peak power / thread (W)",
         "avg power (W)",
         "energy (J)",
-        "peak temperature (°C)",
+        "peak temperature (C)",
     ]
     threads = get_threads()
 
