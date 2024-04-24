@@ -379,6 +379,7 @@ def ondemand_demo():
 
 def multi_threading_test():
     for benchmark in (
+        "parsec-x264",
         "parsec-blackscholes",
         "parsec-bodytrack",
         "parsec-canneal",
@@ -386,7 +387,6 @@ def multi_threading_test():
         "parsec-fluidanimate",
         "parsec-streamcluster",
         "parsec-swaptions",
-        "parsec-x264",
         #'splash2-barnes',
         #'splash2-fmm',
         #'splash2-ocean.cont',
@@ -414,12 +414,84 @@ def multi_threading_test():
                     print("Big L")
 
 
-def dvfs_test():
+def dvfs_symmetric_slow_test():
+    for benchmark in (
+        #"parsec-blackscholes",
+        "parsec-bodytrack",
+        "parsec-canneal",
+        "parsec-dedup",
+        #"parsec-fluidanimate",
+        #"parsec-streamcluster",
+        #"parsec-swaptions",
+        #"parsec-x264",
+        #'splash2-barnes',
+        #'splash2-fmm',
+        #'splash2-ocean.cont',
+        #'splash2-ocean.ncont',
+        #'splash2-radiosity',
+        #'splash2-raytrace',
+        #'splash2-water.nsq',
+        #'splash2-water.sp',
+        #'splash2-cholesky',
+        #'splash2-fft',
+        #'splash2-lu.cont',
+        #'splash2-lu.ncont',
+        #'splash2-radix',
+    ):
+        min_parallelism = get_feasible_parallelisms(benchmark)[0]
+        max_parallelism = get_feasible_parallelisms(benchmark)[-1]
+        for cores in [2, 3, 4]:
+            for freq in (2, 4):
+                try:
+                    run(
+                        ["{:.1f}GHz".format(freq), "ondemand", "slowDVFS"],
+                        get_instance(benchmark, cores, input_set="simsmall"),
+                    )
+                except Infeasible:
+                    print("Big L")
+
+def dvfs_symmetric_fast_test():
     for benchmark in (
         "parsec-blackscholes",
         "parsec-bodytrack",
         "parsec-canneal",
         "parsec-dedup",
+        "parsec-fluidanimate",
+        "parsec-streamcluster",
+        "parsec-swaptions",
+        "parsec-x264",
+        #'splash2-barnes',
+        #'splash2-fmm',
+        #'splash2-ocean.cont',
+        #'splash2-ocean.ncont',
+        #'splash2-radiosity',
+        #'splash2-raytrace',
+        #'splash2-water.nsq',
+        #'splash2-water.sp',
+        #'splash2-cholesky',
+        #'splash2-fft',
+        #'splash2-lu.cont',
+        #'splash2-lu.ncont',
+        #'splash2-radix',
+    ):
+        min_parallelism = get_feasible_parallelisms(benchmark)[0]
+        max_parallelism = get_feasible_parallelisms(benchmark)[-1]
+        for cores in [2, 3, 4]:
+            for freq in (2, 4):
+                try:
+                    run(
+                        ["{:.1f}GHz".format(freq), "ondemand", "fastDVFS"],
+                        get_instance(benchmark, cores, input_set="simsmall"),
+                    )
+                except Infeasible:
+                    print("Big L")
+
+def dvfs_asymmetric_test():
+    for benchmark in (
+        # "parsec-blackscholes",
+        # "parsec-bodytrack",
+        # "parsec-canneal",
+        # "parsec-dedup",
         "parsec-fluidanimate",
         "parsec-streamcluster",
         "parsec-swaptions",
@@ -452,6 +524,10 @@ def dvfs_test():
                     except Infeasible:
                         print("Big L")
 
+def coldestcore_demo():
+    run(['{:.1f}GHz'.format(2.4), 'maxFreq', 'slowDVFS', 'coldestCore'],
+    get_instance('parsec-blackscholes', 3, input_set='simsmall'))
+
 def migration_test():
     for benchmark in (
         "parsec-blackscholes",
@@ -478,20 +554,21 @@ def migration_test():
     ):
         min_parallelism = get_feasible_parallelisms(benchmark)[0]
         max_parallelism = get_feasible_parallelisms(benchmark)[-1]
-        for cores in [1, 2, 3, 4]:
-            for freq in (1, 2, 3, 4):
-                try:
-                    run(
-                        [
-                            "{:.1f}GHz".format(freq),
-                            "maxFreq",
-                            "slowDVFS",
-                            "coldestCore",
-                        ],
-                        get_instance(benchmark, cores, input_set="simsmall"),
-                    )
-                except Infeasible:
-                    print("Big L")
+        freq = 2
+        cores = 4
+        try:
+            run(
+                [
+                    "{:.1f}GHz".format(freq),
+                    "maxFreq",
+                    "slowDVFS",
+                    "coldestCore",
+                ],
+                get_instance(benchmark, cores, input_set="simsmall"),
+            )
+            print("finished :" + benchmark)
+        except Infeasible:
+            print("Big L")
 
 
 def multi_program_test():
@@ -580,7 +657,9 @@ def main():
     # multi_threading_test()
     # migration_test()
     # multi_program_test()
-    dvfs_test()
+    # dvfs_test()
+    #dvfs_symmetric_fast_test()
+    dvfs_symmetric_slow_test()
 
 
 if __name__ == "__main__":

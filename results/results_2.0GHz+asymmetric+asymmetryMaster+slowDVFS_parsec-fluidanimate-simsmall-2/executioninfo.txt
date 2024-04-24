@@ -1,0 +1,5 @@
+started:    2024-04-24 12:36:52
+ended:      2024-04-24 13:12:54
+duration:   0:36:01.585729
+host:       50cab10fbbab
+tasks:      parsec-fluidanimate-simsmall-2
