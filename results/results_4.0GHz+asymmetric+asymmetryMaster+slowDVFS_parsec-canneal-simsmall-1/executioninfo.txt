@@ -1,0 +1,5 @@
+started:    2024-04-24 13:28:08
+ended:      2024-04-24 15:12:21
+duration:   1:44:12.426517
+host:       bba4ed6f3952
+tasks:      parsec-canneal-simsmall-1
