@@ -5,14 +5,14 @@ depend-branch          0.00       0.02       0.02       0.00
 issue-port2            0.00       0.03       0.04       0.00
 issue-port015          0.00       0.02       0.03       0.03
 branch                 0.00       0.16       0.12       0.10
-ifetch                 0.11       0.10       0.12       0.13
+ifetch                 0.10       0.09       0.12       0.13
 mem-l1d                0.00       0.10       0.09       0.09
 mem-l3                 0.00       0.02       0.02       0.00
-mem-dram               0.13       0.02       0.00       0.00
-sync-futex             7.92       0.00       0.49       0.74
+mem-dram               0.15       0.02       0.00       0.00
+sync-futex             7.93       0.00       0.49       0.73
 sync-unscheduled        0.00       0.03       0.05       0.11
 imbalance              0.00       0.00       0.01       0.00
-imbalance-end          0.00       0.10       0.00       1.70
-other                  0.24       0.02       0.03       0.11
+imbalance-end          0.00       0.10       0.00       1.71
+other                  0.23       0.01       0.03       0.11
 
-total                  8.71       1.03       1.42       3.42
+total                  8.71       1.03       1.43       3.42

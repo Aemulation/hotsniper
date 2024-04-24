@@ -1,5 +1,5 @@
-started:    2024-04-23 01:06:44
-ended:      2024-04-23 02:46:43
-duration:   1:39:58.640060
+started:    2024-04-24 17:23:25
+ended:      2024-04-24 19:05:40
+duration:   1:42:15.008733
 host:       50cab10fbbab
 tasks:      parsec-dedup-simsmall-1
