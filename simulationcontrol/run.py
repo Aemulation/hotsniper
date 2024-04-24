@@ -416,10 +416,10 @@ def multi_threading_test():
 
 def dvfs_test():
     for benchmark in (
-        "parsec-blackscholes",
-        "parsec-bodytrack",
-        "parsec-canneal",
-        "parsec-dedup",
+        # "parsec-blackscholes",
+        # "parsec-bodytrack",
+        # "parsec-canneal",
+        # "parsec-dedup",
         "parsec-fluidanimate",
         "parsec-streamcluster",
         "parsec-swaptions",
@@ -577,10 +577,10 @@ def main():
     # ondemand_demo()
     # test_static_power()
     # multi_program()
-    multi_threading_test()
+    # multi_threading_test()
     # migration_test()
-    multi_program_test()
-    # dvfs_test()
+    # multi_program_test()
+    dvfs_test()
 
 
 if __name__ == "__main__":

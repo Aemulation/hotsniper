@@ -29,15 +29,17 @@ def plot_results(data, x_label, y_label, plot_name=''):
     # ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
             
     plt.savefig('plots/' + x_label + '_' + plot_name + '_' + y_label.replace('°', '') + '.png')
+    # close the plt
+    plt.close()
 
-    # Create a separate legend figure and save it as legend.png
-    legend_fig, legend_ax = plt.subplots()
-    for bench, color in sorted(colors.items()):
-      legend_ax.plot([], [], label=bench, color=color[0], linestyle=color[1], marker='o')
-    legend_ax.legend(markerscale=0.7)
-    legend_ax.axis('off')
-    legend_fig.set_size_inches(fig.get_size_inches()[0]/3, fig.get_size_inches()[1]/2.2)
-    legend_fig.savefig('plots/legend.png', bbox_inches='tight', pad_inches=0)
+    # # Create a separate legend figure and save it as legend.png
+    # legend_fig, legend_ax = plt.subplots()
+    # for bench, color in sorted(colors.items()):
+    #   legend_ax.plot([], [], label=bench, color=color[0], linestyle=color[1], marker='o')
+    # legend_ax.legend(markerscale=0.7)
+    # legend_ax.axis('off')
+    # legend_fig.set_size_inches(fig.get_size_inches()[0]/3, fig.get_size_inches()[1]/2.2)
+    # legend_fig.savefig('plots/legend.png', bbox_inches='tight', pad_inches=0)
 
 
 
@@ -66,7 +68,8 @@ def make_freq_plot(header, filterstring, cores):
     freq_index = headers.index("clockspeed")
     cores_index = headers.index("cores")
 
-    filtered_data = [d for d in data if "+".join(d[filter_index].split('+')[1:]) == filterstring and d[cores_index] == cores]
+    filtered_data = [d for d in data if "+".join(d[filter_index].split('+')[1:]) == filterstring and d[cores_index] == int(cores)]
+
     data = {}
     for d in filtered_data:
       if d[name_index] not in data:
