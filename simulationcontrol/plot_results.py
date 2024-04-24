@@ -112,6 +112,32 @@ def make_multiprogram_plot(header):
   plot_results(data, 'programs', header, 'multiprogramming+maxFreq')
 
 
+def make_multiprogram_plot(header):
+  configs=['parsec-x264-simsmall-1',
+           'parsec-x264-simsmall-1,parsec-x264-simsmall-1',
+            'parsec-x264-simsmall-1,parsec-x264-simsmall-1,parsec-x264-simsmall-1',
+            'parsec-x264-simsmall-1,parsec-x264-simsmall-1,parsec-x264-simsmall-1,parsec-x264-simsmall-1']
+  headers, data = parse_results_returner()
+  header_index = headers.index(header)
+  cores_index = headers.index("cores")
+  freq_index = headers.index("clockspeed")
+  config_index = headers.index("config")
+
+  filtered_data = [d for d in data if d[config_index] in configs]
+
+  data = {}
+  for d in filtered_data:
+    if str(d[freq_index]) + 'GHz' not in data:
+      data[str(d[freq_index]) + 'GHz'] = [(configs.index(d[config_index])+1, d[header_index])]
+    else:
+      data[str(d[freq_index]) + 'GHz'].append((configs.index(d[config_index])+1, d[header_index]))
+  
+  # order every item by the number of cores
+  for key in data.keys():
+    data[key] = sorted(data[key], key=lambda x: x[0])
+  
+  plot_results(data, 'programs', header, 'multiprogramming+maxFreq')
+
 make_cores_plot('avg resp time (ns)', '1.0GHz+maxFreq+slowDVFS')
 make_cores_plot('avg resp time (ns)', '2.0GHz+maxFreq+slowDVFS')
 make_cores_plot('avg resp time (ns)', '3.0GHz+maxFreq+slowDVFS')
@@ -151,3 +177,4 @@ make_multiprogram_plot('avg resp time (ns)')
 make_multiprogram_plot('avg power (W)')
 make_multiprogram_plot('energy (J)')
 make_multiprogram_plot('peak temperature (C)')
+
