@@ -452,6 +452,10 @@ def dvfs_test():
                     except Infeasible:
                         print("Big L")
 
+def coldestcore_demo():
+    run(['{:.1f}GHz'.format(2.4), 'maxFreq', 'slowDVFS', 'coldestCore'],
+    get_instance('parsec-blackscholes', 3, input_set='simsmall'))
+
 def migration_test():
     for benchmark in (
         "parsec-blackscholes",
@@ -478,20 +482,21 @@ def migration_test():
     ):
         min_parallelism = get_feasible_parallelisms(benchmark)[0]
         max_parallelism = get_feasible_parallelisms(benchmark)[-1]
-        for cores in [1, 2, 3, 4]:
-            for freq in (1, 2, 3, 4):
-                try:
-                    run(
-                        [
-                            "{:.1f}GHz".format(freq),
-                            "maxFreq",
-                            "slowDVFS",
-                            "coldestCore",
-                        ],
-                        get_instance(benchmark, cores, input_set="simsmall"),
-                    )
-                except Infeasible:
-                    print("Big L")
+        freq = 2
+        cores = 4
+        try:
+            run(
+                [
+                    "{:.1f}GHz".format(freq),
+                    "maxFreq",
+                    "slowDVFS",
+                    "coldestCore",
+                ],
+                get_instance(benchmark, cores, input_set="simsmall"),
+            )
+            print("finished :" + benchmark)
+        except Infeasible:
+            print("Big L")
 
 
 def multi_program_test():
