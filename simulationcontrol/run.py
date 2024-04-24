@@ -620,6 +620,54 @@ def multi_program_test():
             except Infeasible:
                 print('Big L')
 
+
+def rerun_faulty_tests():
+    for benchmark in (
+        "parsec-x264",
+    ):
+        min_parallelism = get_feasible_parallelisms(benchmark)[0]
+        max_parallelism = get_feasible_parallelisms(benchmark)[-1]
+        for cores in [1]:
+            for freq in (1, 2):
+                try:
+                    run(
+                        ["{:.1f}GHz".format(freq), "maxFreq", "slowDVFS"],
+                        get_instance(benchmark, cores, input_set="simsmall"),
+                    )
+                except Infeasible:
+                    print("Big L")
+                    
+    benchmark_set = [
+        'parsec-x264',
+        'parsec-x264',
+        'parsec-x264',
+        'parsec-x264',
+    ]
+
+    for cores in [2]:
+        for freq in (1, 2):
+            try:
+                benchmarks = ""
+                for i, benchmark in enumerate(benchmark_set[:cores]):
+                    min_parallelism = get_feasible_parallelisms(benchmark)[0]
+                    if i != 0:
+                        benchmarks = (
+                            benchmarks + "," + get_instance(benchmark, min_parallelism, input_set="simsmall")
+                        )
+                    else:
+                        benchmarks = benchmarks + get_instance(
+                            benchmark, min_parallelism, input_set="simsmall"
+                        )
+                run(
+                    ["{:.1f}GHz".format(freq), "maxFreq", "{}arrivals".format(cores)],
+                    benchmarks,
+                )
+            except Infeasible:
+                print('Big L')
+
+
+
+
     # In this example, two instances of blackscholes will be scheduled.
     # By setting the scheduler/open/arrivalRate base.cfg parameter to 2, the
     # tasks can be set to arrive at the same time.
@@ -659,7 +707,8 @@ def main():
     # multi_program_test()
     # dvfs_test()
     #dvfs_symmetric_fast_test()
-    dvfs_symmetric_slow_test()
+    # dvfs_symmetric_slow_test()
+    rerun_faulty_tests()
 
 
 if __name__ == "__main__":
