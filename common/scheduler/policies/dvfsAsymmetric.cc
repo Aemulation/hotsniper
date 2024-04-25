@@ -12,25 +12,6 @@ std::vector<int> DVFSAsymmetric::getFrequencies(const std::vector<int> &oldFrequ
     std::vector<int> frequencies(coreRows * coreColumns);
 
     for (unsigned int coreCounter = 0; coreCounter < coreRows * coreColumns; coreCounter++) {
-        // if (activeCores.at(coreCounter)) {
-        //     float power = performanceCounters->getPowerOfCore(coreCounter);
-        //     float temperature = performanceCounters->getTemperatureOfCore(coreCounter);
-        //     int frequency = oldFrequencies.at(coreCounter);
-        //     float utilization = performanceCounters->getUtilizationOfCore(coreCounter);
-
-        //     cout << "[Scheduler][DVFSAsymmetric]: Core " << setw(2) << coreCounter << ":";
-        //     cout << " P=" << fixed << setprecision(3) << power << " W";
-        //     cout << " (budget: " << fixed << setprecision(3) << perCorePowerBudget << " W)";
-        //     cout << " f=" << frequency << " MHz";
-        //     cout << " T=" << fixed << setprecision(1) << temperature << " °C";
-        //     cout << " utilization=" << fixed << setprecision(3) << utilization << endl;
-
-        //     int expectedGoodFrequency = PowerModel::getExpectedGoodFrequency(frequency, power, perCorePowerBudget, minFrequency, maxFrequency, frequencyStepSize);
-        //     frequencies.at(coreCounter) = expectedGoodFrequency;
-        // } else {
-        //     frequencies.at(coreCounter) = minFrequency;
-        // }
-
         if(asymmetry == "master"){
             frequencies.at(0) = minFrequency;
 
