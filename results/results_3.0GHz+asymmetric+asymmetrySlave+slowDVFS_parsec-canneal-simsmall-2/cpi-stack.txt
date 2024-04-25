@@ -1,0 +1,16 @@
+CPI                  Core 0     Core 1     Core 2     Core 3   
+base                   0.36       1.57       1.57       0.00
+depend                 0.00       0.25       0.25       0.00
+depend-int             0.07       0.00       0.00       0.00
+depend-branch          0.07       0.00       0.00       0.00
+issue-port2            0.03       0.00       0.00       0.00
+branch                 0.66       0.41       0.41       0.00
+mem-l1d                0.09       0.00       0.00       0.00
+mem-l3                 0.27       1.71       1.71       0.00
+mem-dram               0.48       0.86       0.86       0.00
+sync-futex             0.53       0.00       0.00       0.00
+sync-unscheduled        0.00      15.97      15.97       0.00
+imbalance-end          0.00       3.77       3.78   3464091096.36
+other                  0.05       0.24       0.24    8000.00
+
+total                  2.61      24.78      24.79   3464099096.36
