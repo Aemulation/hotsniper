@@ -143,9 +143,6 @@ def make_coldest_core_plot(header):
   plot_results(data, 'coldest core', header, '2.0GHz+maxFreq+slowDVFS+coldestCore+4')
 
 
-#################
-### multi threading
-#################
 # make_cores_plot('avg resp time (ns)', '1.0GHz+maxFreq+slowDVFS')
 # make_cores_plot('avg resp time (ns)', '2.0GHz+maxFreq+slowDVFS')
 # make_cores_plot('avg resp time (ns)', '3.0GHz+maxFreq+slowDVFS')
@@ -167,74 +164,63 @@ def make_coldest_core_plot(header):
 # make_cores_plot('sim. time (ns)', '3.0GHz+maxFreq+slowDVFS')
 # make_cores_plot('sim. time (ns)', '4.0GHz+maxFreq+slowDVFS')
 
-#################
-### symm dvfs
-#################
-make_freq_plot('avg resp time (ns)', 'maxFreq+slowDVFS', '1')
-make_freq_plot('avg resp time (ns)', 'maxFreq+slowDVFS', '2')
-make_freq_plot('avg resp time (ns)', 'maxFreq+slowDVFS', '3')
-make_freq_plot('avg resp time (ns)', 'maxFreq+slowDVFS', '4')
-make_freq_plot('avg power (W)', 'maxFreq+slowDVFS', '1')
-make_freq_plot('avg power (W)', 'maxFreq+slowDVFS', '2')
-make_freq_plot('avg power (W)', 'maxFreq+slowDVFS', '3')
-make_freq_plot('avg power (W)', 'maxFreq+slowDVFS', '4')
-make_freq_plot('energy (J)', 'maxFreq+slowDVFS', '1')
-make_freq_plot('energy (J)', 'maxFreq+slowDVFS', '2')
-make_freq_plot('energy (J)', 'maxFreq+slowDVFS', '3')
-make_freq_plot('energy (J)', 'maxFreq+slowDVFS', '4')
-make_freq_plot('peak temperature (C)', 'maxFreq+slowDVFS', '1')
-make_freq_plot('peak temperature (C)', 'maxFreq+slowDVFS', '2')
-make_freq_plot('peak temperature (C)', 'maxFreq+slowDVFS', '3')
-make_freq_plot('peak temperature (C)', 'maxFreq+slowDVFS', '4')
-make_freq_plot('sim. time (ns)', 'maxFreq+slowDVFS', '1')
-make_freq_plot('sim. time (ns)', 'maxFreq+slowDVFS', '2')
-make_freq_plot('sim. time (ns)', 'maxFreq+slowDVFS', '3')
-make_freq_plot('sim. time (ns)', 'maxFreq+slowDVFS', '4')
+# make_freq_plot('avg resp time (ns)', 'maxFreq+slowDVFS', '1')
+# make_freq_plot('avg resp time (ns)', 'maxFreq+slowDVFS', '2')
+# make_freq_plot('avg resp time (ns)', 'maxFreq+slowDVFS', '3')
+# make_freq_plot('avg resp time (ns)', 'maxFreq+slowDVFS', '4')
+# make_freq_plot('avg power (W)', 'maxFreq+slowDVFS', '1')
+# make_freq_plot('avg power (W)', 'maxFreq+slowDVFS', '2')
+# make_freq_plot('avg power (W)', 'maxFreq+slowDVFS', '3')
+# make_freq_plot('avg power (W)', 'maxFreq+slowDVFS', '4')
+# make_freq_plot('energy (J)', 'maxFreq+slowDVFS', '1')
+# make_freq_plot('energy (J)', 'maxFreq+slowDVFS', '2')
+# make_freq_plot('energy (J)', 'maxFreq+slowDVFS', '3')
+# make_freq_plot('energy (J)', 'maxFreq+slowDVFS', '4')
+# make_freq_plot('peak temperature (C)', 'maxFreq+slowDVFS', '1')
+# make_freq_plot('peak temperature (C)', 'maxFreq+slowDVFS', '2')
+# make_freq_plot('peak temperature (C)', 'maxFreq+slowDVFS', '3')
+# make_freq_plot('peak temperature (C)', 'maxFreq+slowDVFS', '4')
+# make_freq_plot('sim. time (ns)', 'maxFreq+slowDVFS', '1')
+# make_freq_plot('sim. time (ns)', 'maxFreq+slowDVFS', '2')
+# make_freq_plot('sim. time (ns)', 'maxFreq+slowDVFS', '3')
+# make_freq_plot('sim. time (ns)', 'maxFreq+slowDVFS', '4')
 
 
-#################
-### multi proigram
-#################
-# make_multiprogram_plot('avg resp time (ns)')
-# make_multiprogram_plot('avg power (W)')
-# make_multiprogram_plot('energy (J)')
-# make_multiprogram_plot('peak temperature (C)')
-# make_multiprogram_plot('sim. time (ns)')
+'''
+make_multiprogram_plot('avg resp time (ns)')
+make_multiprogram_plot('avg power (W)')
+make_multiprogram_plot('energy (J)')
+make_multiprogram_plot('peak temperature (C)')
+make_multiprogram_plot('sim. time (ns)')
+
+make_coldest_core_plot('avg resp time (ns)')
+make_coldest_core_plot('avg power (W)')
+make_coldest_core_plot('energy (J)')
+make_coldest_core_plot('peak temperature (C)')
+make_coldest_core_plot('sim. time (ns)')
 
 
-#################
-### thread migration
-#################
-# make_coldest_core_plot('avg resp time (ns)')
-# make_coldest_core_plot('avg power (W)')
-# make_coldest_core_plot('energy (J)')
-# make_coldest_core_plot('peak temperature (C)')
-# make_coldest_core_plot('sim. time (ns)')
+make_cores_plot('avg resp time (ns)', '2.0GHz+ondemand+slowDVFS')
+make_cores_plot('avg power (W)', '2.0GHz+ondemand+slowDVFS')
+make_cores_plot('energy (J)', '2.0GHz+ondemand+slowDVFS')
+make_cores_plot('peak temperature (C)', '2.0GHz+ondemand+slowDVFS')
+make_cores_plot('sim. time (ns)', '2.0GHz+ondemand+slowDVFS')
 
+make_cores_plot('avg resp time (ns)', '2.0GHz+ondemand+fastDVFS')
+make_cores_plot('avg power (W)', '2.0GHz+ondemand+fastDVFS')
+make_cores_plot('energy (J)', '2.0GHz+ondemand+fastDVFS')
+make_cores_plot('peak temperature (C)', '2.0GHz+ondemand+fastDVFS')
+make_cores_plot('sim. time (ns)', '2.0GHz+ondemand+fastDVFS')
 
-#################
-### assym dvfs
-#################
-# make_cores_plot('avg resp time (ns)', '2.0GHz+ondemand+slowDVFS')
-# make_cores_plot('avg power (W)', '2.0GHz+ondemand+slowDVFS')
-# make_cores_plot('energy (J)', '2.0GHz+ondemand+slowDVFS')
-# make_cores_plot('peak temperature (C)', '2.0GHz+ondemand+slowDVFS')
-# make_cores_plot('sim. time (ns)', '2.0GHz+ondemand+slowDVFS')
+make_cores_plot('avg resp time (ns)', '4.0GHz+ondemand+slowDVFS')
+make_cores_plot('avg power (W)', '4.0GHz+ondemand+slowDVFS')
+make_cores_plot('energy (J)', '4.0GHz+ondemand+slowDVFS')
+make_cores_plot('peak temperature (C)', '4.0GHz+ondemand+slowDVFS')
+make_cores_plot('sim. time (ns)', '4.0GHz+ondemand+slowDVFS')
 
-# make_cores_plot('avg resp time (ns)', '2.0GHz+ondemand+fastDVFS')
-# make_cores_plot('avg power (W)', '2.0GHz+ondemand+fastDVFS')
-# make_cores_plot('energy (J)', '2.0GHz+ondemand+fastDVFS')
-# make_cores_plot('peak temperature (C)', '2.0GHz+ondemand+fastDVFS')
-# make_cores_plot('sim. time (ns)', '2.0GHz+ondemand+fastDVFS')
-
-# make_cores_plot('avg resp time (ns)', '4.0GHz+ondemand+slowDVFS')
-# make_cores_plot('avg power (W)', '4.0GHz+ondemand+slowDVFS')
-# make_cores_plot('energy (J)', '4.0GHz+ondemand+slowDVFS')
-# make_cores_plot('peak temperature (C)', '4.0GHz+ondemand+slowDVFS')
-# make_cores_plot('sim. time (ns)', '4.0GHz+ondemand+slowDVFS')
-
-# make_cores_plot('avg resp time (ns)', '4.0GHz+ondemand+fastDVFS')
-# make_cores_plot('avg power (W)', '4.0GHz+ondemand+fastDVFS')
-# make_cores_plot('energy (J)', '4.0GHz+ondemand+fastDVFS')
-# make_cores_plot('peak temperature (C)', '4.0GHz+ondemand+fastDVFS')
-# make_cores_plot('sim. time (ns)', '4.0GHz+ondemand+fastDVFS')
+make_cores_plot('avg resp time (ns)', '4.0GHz+ondemand+fastDVFS')
+make_cores_plot('avg power (W)', '4.0GHz+ondemand+fastDVFS')
+make_cores_plot('energy (J)', '4.0GHz+ondemand+fastDVFS')
+make_cores_plot('peak temperature (C)', '4.0GHz+ondemand+fastDVFS')
+make_cores_plot('sim. time (ns)', '4.0GHz+ondemand+fastDVFS')
+'''
