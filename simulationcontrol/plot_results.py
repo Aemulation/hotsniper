@@ -152,8 +152,8 @@ def make_ondemand_slow_dvfs(header):
   config_index = headers.index("config")
 
   
-  #filtered_data = [d for d in data if d[filter_index] == '4.0GHz+ondemand+slowDVFS']
-  filtered_data = [d for d in data if d[filter_index] == '2.0GHz+ondemand+slowDVFS']
+  filtered_data = [d for d in data if d[filter_index] == '4.0GHz+ondemand+slowDVFS']
+  #filtered_data = [d for d in data if d[filter_index] == '2.0GHz+ondemand+slowDVFS']
 
   data = {}
   for d in filtered_data:
@@ -162,8 +162,8 @@ def make_ondemand_slow_dvfs(header):
     else:
       data[d[name_index]].append((d[cores_index], d[header_index]))
   
-  #plot_results(data, 'cores', header, '4.0GHz+ondemand+slowDVFS')
-  plot_results(data, 'cores', header, '2.0GHz+ondemand+slowDVFS')
+  plot_results(data, 'cores', header, '4.0GHz+ondemand+slowDVFS')
+  #plot_results(data, 'cores', header, '2.0GHz+ondemand+slowDVFS')
 
 
 # make_cores_plot('avg resp time (ns)', '1.0GHz+maxFreq+slowDVFS')
