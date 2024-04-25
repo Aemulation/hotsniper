@@ -512,21 +512,30 @@ def dvfs_asymmetric_test():
     ):
         min_parallelism = get_feasible_parallelisms(benchmark)[0]
         max_parallelism = get_feasible_parallelisms(benchmark)[-1]
-        
+
         for target in ["Master", "Slave"]:
             for cores in [2, 3, 4]:
                 for freq in (2, 3, 4):
                     try:
                         run(
-                            ["{:.1f}GHz".format(freq), "asymmetric", "asymmetry{}".format(target), "slowDVFS"],
+                            [
+                                "{:.1f}GHz".format(freq),
+                                "asymmetric",
+                                "asymmetry{}".format(target),
+                                "slowDVFS",
+                            ],
                             get_instance(benchmark, cores, input_set="simsmall"),
                         )
                     except Infeasible:
                         print("Big L")
 
+
 def coldestcore_demo():
-    run(['{:.1f}GHz'.format(2.4), 'maxFreq', 'slowDVFS', 'coldestCore'],
-    get_instance('parsec-blackscholes', 3, input_set='simsmall'))
+    run(
+        ["{:.1f}GHz".format(2.4), "maxFreq", "slowDVFS", "coldestCore"],
+        get_instance("parsec-blackscholes", 3, input_set="simsmall"),
+    )
+
 
 def migration_test():
     for benchmark in (
@@ -573,10 +582,10 @@ def migration_test():
 
 def multi_program_test():
     benchmark_set = [
-        'parsec-x264',
-        'parsec-x264',
-        'parsec-x264',
-        'parsec-x264',
+        "parsec-x264",
+        "parsec-x264",
+        "parsec-x264",
+        "parsec-x264",
         # "parsec-blackscholes",
         # 'parsec-bodytrack',
         # 'parsec-canneal',
@@ -607,7 +616,11 @@ def multi_program_test():
                     min_parallelism = get_feasible_parallelisms(benchmark)[0]
                     if i != 0:
                         benchmarks = (
-                            benchmarks + "," + get_instance(benchmark, min_parallelism, input_set="simsmall")
+                            benchmarks
+                            + ","
+                            + get_instance(
+                                benchmark, min_parallelism, input_set="simsmall"
+                            )
                         )
                     else:
                         benchmarks = benchmarks + get_instance(
@@ -618,7 +631,7 @@ def multi_program_test():
                     benchmarks,
                 )
             except Infeasible:
-                print('Big L')
+                print("Big L")
 
 
 def rerun_faulty_tests():
@@ -702,13 +715,13 @@ def main():
     # ondemand_demo()
     # test_static_power()
     # multi_program()
-    # multi_threading_test()
+    multi_threading_test()
+    # rerun_faulty_tests()
     # migration_test()
     # multi_program_test()
     # dvfs_test()
-    #dvfs_symmetric_fast_test()
+    # dvfs_symmetric_fast_test()
     # dvfs_symmetric_slow_test()
-    rerun_faulty_tests()
 
 
 if __name__ == "__main__":
