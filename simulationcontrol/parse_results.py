@@ -112,7 +112,7 @@ def parse_results():
 
 
 def main():
-    parse_results()
+    parse_results_returner()
 
 
 if __name__ == "__main__":

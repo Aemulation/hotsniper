@@ -125,6 +125,7 @@ def make_coldest_core_plot(header):
 
   # get all the coldest core data
   filtered_data = [d for d in data if d[filter_index] == '2.0GHz+maxFreq+slowDVFS+coldestCore']
+  print(filtered_data)
   # get the same tests but without coldest core
   filtered_configs = [d[config_index] for d in filtered_data]
   filtered_data_no_coldest = [d for d in data if d[filter_index] == '2.0GHz+maxFreq+slowDVFS' and d[config_index] in filtered_configs]
@@ -141,6 +142,28 @@ def make_coldest_core_plot(header):
   
   plot_results(data, 'coldest core', header, '2.0GHz+maxFreq+slowDVFS+coldestCore+4')
 
+
+def make_ondemand_slow_dvfs(header):
+  headers, data = parse_results_returner()
+  header_index = headers.index(header)
+  name_index = headers.index('name')
+  filter_index = headers.index("filter")
+  cores_index = headers.index("cores")
+  config_index = headers.index("config")
+
+  
+  filtered_data = [d for d in data if d[filter_index] == '4.0GHz+ondemand+slowDVFS']
+  #filtered_data = [d for d in data if d[filter_index] == '2.0GHz+ondemand+slowDVFS']
+
+  data = {}
+  for d in filtered_data:
+    if d[name_index] not in data:
+      data[d[name_index]] = [(d[cores_index], d[header_index])]
+    else:
+      data[d[name_index]].append((d[cores_index], d[header_index]))
+  
+  plot_results(data, 'cores', header, '4.0GHz+ondemand+slowDVFS')
+  #plot_results(data, 'cores', header, '2.0GHz+ondemand+slowDVFS')
 
 
 # make_cores_plot('avg resp time (ns)', '1.0GHz+maxFreq+slowDVFS')
@@ -185,14 +208,21 @@ def make_coldest_core_plot(header):
 # make_freq_plot('sim. time (ns)', 'maxFreq+slowDVFS', '3')
 # make_freq_plot('sim. time (ns)', 'maxFreq+slowDVFS', '4')
 
+
 make_multiprogram_plot('avg resp time (ns)')
 make_multiprogram_plot('avg power (W)')
 make_multiprogram_plot('energy (J)')
 make_multiprogram_plot('peak temperature (C)')
 make_multiprogram_plot('sim. time (ns)')
 
-# make_coldest_core_plot('avg resp time (ns)')
-# make_coldest_core_plot('avg power (W)')
-# make_coldest_core_plot('energy (J)')
-# make_coldest_core_plot('peak temperature (C)')
-# make_coldest_core_plot('sim. time (ns)')
+make_coldest_core_plot('avg resp time (ns)')
+make_coldest_core_plot('avg power (W)')
+make_coldest_core_plot('energy (J)')
+make_coldest_core_plot('peak temperature (C)')
+make_coldest_core_plot('sim. time (ns)')
+
+
+make_ondemand_slow_dvfs('avg resp time (ns)')
+make_ondemand_slow_dvfs('avg power (W)')
+make_ondemand_slow_dvfs('energy (J)')
+make_ondemand_slow_dvfs('peak temperature (C)')
