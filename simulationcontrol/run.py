@@ -407,7 +407,7 @@ def multi_threading_test():
             for freq in (1, 2, 3, 4):
                 try:
                     run(
-                        ["{:.1f}GHz".format(freq), "ondemand", "slowDVFS"],
+                        ["{:.1f}GHz".format(freq), "maxFreq", "slowDVFS"],
                         get_instance(benchmark, cores, input_set="simsmall"),
                     )
                 except Infeasible:
@@ -715,12 +715,12 @@ def main():
     # ondemand_demo()
     # test_static_power()
     # multi_program()
-    rerun_faulty_tests()
     multi_threading_test()
+    # rerun_faulty_tests()
     # migration_test()
     # multi_program_test()
     # dvfs_test()
-    dvfs_symmetric_fast_test()
+    # dvfs_symmetric_fast_test()
     # dvfs_symmetric_slow_test()
 
 
