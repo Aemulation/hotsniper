@@ -702,13 +702,13 @@ def main():
     # ondemand_demo()
     # test_static_power()
     # multi_program()
-    # multi_threading_test()
+    rerun_faulty_tests()
+    multi_threading_test()
     # migration_test()
     # multi_program_test()
     # dvfs_test()
     #dvfs_symmetric_fast_test()
     # dvfs_symmetric_slow_test()
-    rerun_faulty_tests()
 
 
 if __name__ == "__main__":

@@ -1,0 +1,5 @@
+started:    2024-04-24 20:49:34
+ended:      2024-04-24 21:20:36
+duration:   0:31:02.302037
+host:       50cab10fbbab
+tasks:      parsec-x264-simsmall-1
