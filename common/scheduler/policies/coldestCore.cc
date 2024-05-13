@@ -3,7 +3,7 @@
 
 using namespace std;
 
-ColdestCore::ColdestCore(
+FunkyPolicy::FunkyPolicy(
         const PerformanceCounters *performanceCounters,
         int coreRows,
         int coreColumns,
@@ -14,7 +14,7 @@ ColdestCore::ColdestCore(
           criticalTemperature(criticalTemperature) {
 }
 
-std::vector<int> ColdestCore::map(
+std::vector<int> FunkyPolicy::map(
         String taskName,
         int taskCoreRequirement,
         const std::vector<bool> &availableCoresRO,
@@ -41,7 +41,7 @@ std::vector<int> ColdestCore::map(
     return cores;
 }
 
-std::vector<migration> ColdestCore::migrate(
+std::vector<migration> FunkyPolicy::migrate(
         SubsecondTime time,
         const std::vector<int> &taskIds,
         const std::vector<bool> &activeCores) {
@@ -83,7 +83,7 @@ std::vector<migration> ColdestCore::migrate(
 }
 
 
-int ColdestCore::getColdestCore(const std::vector<bool> &availableCores) {
+int FunkyPolicy::getColdestCore(const std::vector<bool> &availableCores) {
     int coldestCore = -1;
     float coldestTemperature = 0;
 
@@ -101,7 +101,7 @@ int ColdestCore::getColdestCore(const std::vector<bool> &availableCores) {
     return coldestCore;
 }
 
-void ColdestCore::logTemperatures(const std::vector<bool> &availableCores) {
+void FunkyPolicy::logTemperatures(const std::vector<bool> &availableCores) {
     cout << "[Scheduler][coldestCore-map]: temperatures of available cores:" << endl;
     for (int y = 0; y < coreRows; y++) {
         for (int x = 0; x < coreColumns; x++) {
