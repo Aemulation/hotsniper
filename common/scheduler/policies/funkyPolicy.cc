@@ -1,5 +1,5 @@
-#include "coldestCore.h"
 #include <iomanip>
+#include "funkyPolicy.h"
 
 using namespace std;
 
@@ -30,23 +30,30 @@ std::vector<int> FunkyPolicy::map(
         const std::vector<bool> &availableCoresRO,
         const std::vector<bool> &activeCores) {
 
-    std::vector<int> bigCores = bigCores(availableCoresRO);
+    std::vector<int> cores;
+
+    for(int c = 0; c < coreRows * coreColumns; c++){
+        std::cout << availableCoresRO.at(c) << std::endl;
+        if(availableCoresRO.at(c) && isBig(c)){
+            std::cout << "[Scheduler][FunkyPolicy]: Core " << c << " is available and big" << std::endl;
+            cores.push_back(c);
+        }
+    }
+
+    return cores;
 }
 
 std::vector<migration> FunkyPolicy::migrate(
         SubsecondTime time,
         const std::vector<int> &taskIds,
         const std::vector<bool> &activeCores) {
-
-
+    std::cout << "[Scheduler][FunkyPolicy]: Migrate" << std::endl;
     std::vector<migration> migrations;
     std::vector<bool> availableCores(coreRows * coreColumns);
     int bigCoresamount = coreRows * coreColumns / 2;
     int hotBigCores, coldBigCores;
     start:
     hotBigCores = 0;
-
-    logTemperatures(availableCores);
 
     // 1
     for (int c = 0; c < coreRows * coreColumns; c++) {
@@ -57,6 +64,8 @@ std::vector<migration> FunkyPolicy::migrate(
             hotBigCores++;
         }
     }
+
+    logTemperatures(availableCores);
 
     coldBigCores = bigCoresamount - hotBigCores;
 
@@ -96,6 +105,7 @@ std::vector<migration> FunkyPolicy::migrate(
                 availableCores.at(mi.fromCore) = true;
             } else {
                 state = State::ESTIMATION;
+                estimationState = EstimationState::START;
             }
         }
     }
@@ -110,7 +120,7 @@ std::vector<migration> FunkyPolicy::migrate(
     return migrations;
 }
 
-std::vector<int> getFrequencies(
+std::vector<int> FunkyPolicy::getFrequencies(
         const std::vector<int> &oldFrequencies,
         const std::vector<bool> &activeCores){
     std::vector<int> frequencies(coreRows * coreColumns);
@@ -154,7 +164,7 @@ void FunkyPolicy::logTemperatures(const std::vector<bool> &availableCores) {
     for (int y = 0; y < coreRows; y++) {
         for (int x = 0; x < coreColumns; x++) {
             int coreId = y * coreColumns + x;
-            cout << isBig(coreId) ? "B" : "S" << coreId;
+            cout << (isBig(coreId) ? "B" : "S") << coreId;
 
             if (x > 0) {
                 cout << " ";
@@ -178,32 +188,32 @@ bool FunkyPolicy::isBig(const int core) {
 }
 
 std::vector<int> FunkyPolicy::bigCores(const std::vector<bool> &availableCores) {
-    std::vector<int> bigCores;
+    std::vector<int> cores;
     for (int c = 0; c < coreRows * coreColumns; c++) {
         if (availableCores.at(c) && isBig(c)) {
-            bigCores.push_back(c);
+            cores.push_back(c);
         }
     }
-    return bigCores;
+    return cores;
 }
 
 std::vector<int> FunkyPolicy::smallCores(const std::vector<bool> &availableCores) {
-    std::vector<int> smallCores;
+    std::vector<int> cores;
     for (int c = 0; c < coreRows * coreColumns; c++) {
         if (availableCores.at(c) && !isBig(c)) {
-            smallCores.push_back(c);
+            cores.push_back(c);
         }
     }
-    return smallCores;
+    return cores;
 }
 
-Optional<migration> FunkyPolicy::bigBigMigration(const std::vector<bool> &availableCores){
+migration FunkyPolicy::bigBigMigration(const std::vector<bool> &availableCores){
     int coreAboveThreshold = -1;
     int coldestCore = -1;
     float coldestTemperature = 0;
-    std::vector<int> bigCores = bigCores(availableCores);
+    std::vector<int> bCores = bigCores(availableCores);
 
-    for(int c : bigCores){
+    for(int c : bCores){
         float temperature = performanceCounters->getTemperatureOfCore(c);
 
         if(temperature > criticalTemperature){
@@ -229,25 +239,25 @@ Optional<migration> FunkyPolicy::bigBigMigration(const std::vector<bool> &availa
 
 std::vector<migration> FunkyPolicy::estimation(SubsecondTime time, const std::vector<bool> &availableCores){
     std::vector<migration> migrations;
+    std::vector<int> bCores = bigCores(availableCores);
+    std::vector<int> sCores = smallCores(availableCores);
 
     if(estimationState == EstimationState::START){
         tMigStart = time;
         CPIHighestSmall = 0;
         CPIHighestBig = 0;
 
-        std::vector<int> bigCores = bigCores(availableCores);
-        std::vector<int> smallCores = smallCores(availableCores);
-
         int curSmallCore = 0;
 
-        for(int c : bigCores){
+        for(int c : bCores){
             migration m;
 
             m.fromCore = c;
-            m.toCore = smallCores.at(curSmallCore);
+            m.toCore = sCores.at(curSmallCore);
             m.swap = false;
             migrations.push_back(m);
-            curSmallCore++ %= smallCores.size();
+            curSmallCore++;
+            curSmallCore %= sCores.size();
 
             fCores.at(c) = minFrequencyBig;
             std::cout << "[Scheduler][FunkyPolicy]: Core " << c << " set to " << minFrequencyBig << " MHz" << std::endl;
@@ -255,17 +265,14 @@ std::vector<migration> FunkyPolicy::estimation(SubsecondTime time, const std::ve
 
         estimationState = EstimationState::SMALLEST_AT_MAX;
     } else if(estimationState == EstimationState::SMALLEST_AT_MAX){
-        std::vector<int> bigCores = bigCores(availableCores);
-        std::vector<int> smallCores = smallCores(availableCores);
-
-        for(int c : smallCores){
-            CPIHighestSmall = max(CPIHighestSmall, PerformanceCounters.getCPIOfCore(c));
+        for(int c : sCores){
+            CPIHighestSmall = max(CPIHighestSmall, performanceCounters->getCPIOfCore(c));
         }
 
         tHighestSmall = time - tMigStart;
 
-        for(int c : bigCores){
-            if(PerformanceCounters.getTemperatureOfCore(c) > criticalTemperature){
+        for(int c : bCores){
+            if(performanceCounters->getTemperatureOfCore(c) > criticalTemperature){
                 goto estimationFinal;
             }
         }
@@ -274,33 +281,28 @@ std::vector<migration> FunkyPolicy::estimation(SubsecondTime time, const std::ve
 
         estimationState = EstimationState::BIGGEST_ARE_COLD;
     } else if(estimationState == EstimationState::BIGGEST_ARE_COLD){
-        std::vector<int> bigCores = bigCores(availableCores);
-        std::vector<int> smallCores = smallCores(availableCores);
-
         int curBigCore = 0;
 
-        for(int c : smallCores){
+        for(int c : sCores){
             migration m;
 
             m.fromCore = c;
-            m.toCore = bigCores.at(curBigCore);
+            m.toCore = bCores.at(curBigCore);
             m.swap = false;
             migrations.push_back(m);
-            curBigCore++ %= bigCores.size();
+            curBigCore++;
+            curBigCore %= bCores.size();
         }
 
-        for(int c : bigCores){
+        for(int c : bCores){
             fCores.at(c) = maxFrequencyBig;
             std::cout << "[Scheduler][FunkyPolicy]: Core " << c << " set to " << maxFrequencyBig << " MHz" << std::endl;
         }
 
         estimationState = EstimationState::BIGGEST_AT_MAX;
     } else if(estimationState == EstimationState::BIGGEST_AT_MAX){
-        std::vector<int> bigCores = bigCores(availableCores);
-        std::vector<int> smallCores = smallCores(availableCores);
-
-        for(int c : bigCores){
-            if(PerformanceCounters.getTemperatureOfCore(c) > criticalTemperature){
+        for(int c : bCores){
+            if(performanceCounters->getTemperatureOfCore(c) > criticalTemperature){
                 std::cout << "[Scheduler][FunkyPolicy]: Big core " << c << " is too hot" << std::endl;
 
                 tMig = time - tMigStart;
@@ -321,20 +323,21 @@ std::vector<migration> FunkyPolicy::estimation(SubsecondTime time, const std::ve
 std::vector<migration> FunkyPolicy::bigSmallMigration(const std::vector<bool> &availableCores){
     std::vector<migration> migrations;
 
-    if(bigSmallMigrationState == BigSmallMigrationState::START){
-        std::vector<int> bigCores = bigCores(availableCores);
-        std::vector<int> smallCores = smallCores(availableCores);
+    std::vector<int> bCores = bigCores(availableCores);
+    std::vector<int> sCores = smallCores(availableCores);
 
+    if(bigSmallMigrationState == BigSmallMigrationState::START){
         int curSmallCore = 0;
 
-        for(int c : bigCores){
+        for(int c : bCores){
             migration m;
 
             m.fromCore = c;
-            m.toCore = smallCores.at(curSmallCore);
+            m.toCore = sCores.at(curSmallCore);
             m.swap = false;
             migrations.push_back(m);
-            curSmallCore++ %= smallCores.size();
+            curSmallCore++;
+            curSmallCore %= sCores.size();
 
             fCores.at(c) = minFrequencyBig;
             std::cout << "[Scheduler][FunkyPolicy]: Core " << c << " set to " << minFrequencyBig << " MHz" << std::endl;
@@ -342,11 +345,8 @@ std::vector<migration> FunkyPolicy::bigSmallMigration(const std::vector<bool> &a
 
         bigSmallMigrationState = BigSmallMigrationState::SMALLEST_AT_MAX;
     } else if(bigSmallMigrationState == BigSmallMigrationState::SMALLEST_AT_MAX){
-        std::vector<int> bigCores = bigCores(availableCores);
-        std::vector<int> smallCores = smallCores(availableCores);
-
-        for(int c : bigCores){
-            if(PerformanceCounters.getTemperatureOfCore(c) > criticalTemperature){
+        for(int c : bCores){
+            if(performanceCounters->getTemperatureOfCore(c) > criticalTemperature){
                 goto bigSmallMigrationFinal;
             }
         }
@@ -355,22 +355,20 @@ std::vector<migration> FunkyPolicy::bigSmallMigration(const std::vector<bool> &a
 
         bigSmallMigrationState = BigSmallMigrationState::BIGGEST_ARE_COLD;
     } else if(bigSmallMigrationState == BigSmallMigrationState::BIGGEST_ARE_COLD){
-        std::vector<int> bigCores = bigCores(availableCores);
-        std::vector<int> smallCores = smallCores(availableCores);
-
         int curBigCore = 0;
 
-        for(int c : smallCores){
+        for(int c : sCores){
             migration m;
 
             m.fromCore = c;
-            m.toCore = bigCores.at(curBigCore);
+            m.toCore = bCores.at(curBigCore);
             m.swap = false;
             migrations.push_back(m);
-            curBigCore++ %= bigCores.size();
+            curBigCore++;
+            curBigCore %= bCores.size();
         }
 
-        for(int c : bigCores){
+        for(int c : bCores){
             fCores.at(c) = maxFrequencyBig;
             std::cout << "[Scheduler][FunkyPolicy]: Core " << c << " set to " << maxFrequencyBig << " MHz" << std::endl;
         }

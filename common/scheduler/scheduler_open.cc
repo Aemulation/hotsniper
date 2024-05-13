@@ -17,7 +17,7 @@
 #include "policies/dvfsTestStaticPower.h"
 #include "policies/dvfsAsymmetric.h"
 #include "policies/mapFirstUnused.h"
-#include "policies/coldestCore.h"
+#include "policies/funkyPolicy.h"
 
 #include <bits/stdc++.h>
 #include <iomanip>
@@ -325,9 +325,9 @@ void SchedulerOpen::initMappingPolicy(String policyName) {
     }
     mappingPolicy =
         new MapFirstUnused(coreRows, coreColumns, preferredCoresOrder);
-  } else if (policyName == "coldestCore") {
-    float criticalTemperature = Sim()->getCfg()->getFloat("scheduler/open/migration/coldestCore/criticalTemperature");
-    mappingPolicy = new FunkyPolicy(performanceCounters, coreRows, coreColumns, criticalTemperature);
+  } else if (policyName == "funky") {
+    float criticalTemperature = Sim()->getCfg()->getFloat("scheduler/open/migration/funky/criticalTemperature");
+    mappingPolicy = new FunkyPolicy(performanceCounters, coreRows, coreColumns, criticalTemperature, minFrequency, maxFrequency, minFrequency / 2, maxFrequency / 2);
   } // else if (policyName ="XYZ") {... } //Place to instantiate a new mapping
     // logic. Implementation is put in "policies" package.
   else {
@@ -382,12 +382,13 @@ void SchedulerOpen::initDVFSPolicy(String policyName) {
  * Initialize the migration policy to the policy with the given name
  */
 void SchedulerOpen::initMigrationPolicy(String policyName) {
-  cout << "[Scheduler] [Info]: Initializing migration policy" << endl;
+  cout << "[Scheduler] [Info]: Initializing migration policy " << policyName << endl;
   if (policyName == "off") {
     migrationPolicy = NULL;
-  } else if (policyName == "coldestCore") {
-    float criticalTemperature = Sim()->getCfg()->getFloat("scheduler/open/migration/coldestCore/criticalTemperature");
-    migrationPolicy = new FunkyPolicy(performanceCounters, coreRows, coreColumns, criticalTemperature);
+  } else if (policyName == "funky") {
+    float criticalTemperature = Sim()->getCfg()->getFloat("scheduler/open/migration/funky/criticalTemperature");
+    std::cout << "Creating funky migration policy" << std::endl;
+    migrationPolicy = new FunkyPolicy(performanceCounters, coreRows, coreColumns, criticalTemperature, minFrequency, maxFrequency, minFrequency / 2, maxFrequency / 2);
   } // else if (policyName ="XYZ") {... } //Place to instantiate a new migration
     // logic. Implementation is put in "policies" package.
   else {

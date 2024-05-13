@@ -17,8 +17,8 @@ class FunkyPolicy : public MappingPolicy, public MigrationPolicy, public DVFSPol
 public:
     FunkyPolicy(
             const PerformanceCounters *performanceCounters,
-            int coreColumns, // flipped size and height
-            int coreRows, // flipped size and height
+            int coreColumns,
+            int coreRows,
             float criticalTemperature,
             int minFrequencyBig,
             int maxFrequencyBig,
@@ -69,26 +69,30 @@ private:
 
     const PerformanceCounters *performanceCounters;
 
-    unsigned int coreColumns; // flipped size and height
-    unsigned int coreRows; // flipped size and height
+    unsigned int coreColumns;
+    unsigned int coreRows;
     float criticalTemperature;
 
     int minFrequencyBig, maxFrequencyBig, minFrequencySmall, maxFrequencySmall;
 
-    SubsecondTime tMigStart;
-    float fHighestBig, fHighestSmall, tHighestBig, tHighestSmall, CPIHighestBig, CPIHighestSmall;
-    float tMig, nMig;
+    SubsecondTime tMigStart, tMig, tHighestBig, tHighestSmall;
+    double fHighestBig, fHighestSmall, CPIHighestBig, CPIHighestSmall;
+    double nMig;
 
     std::vector<int> fCores;
     std::vector<int> tBigFreqs;
     std::vector<int> CPIBig;
 
-    void estimation(SubsecondTime time, const std::vector<bool> &availableCores);
-    void bigSmallMigration(const std::vector<bool> &availableCores);
+    bool isBig(const int core);
+    std::vector<int> bigCores(const std::vector<bool> &availableCores);
+    std::vector<int> smallCores(const std::vector<bool> &availableCores);
+
+    std::vector<migration> estimation(SubsecondTime time, const std::vector<bool> &availableCores);
+    std::vector<migration> bigSmallMigration(const std::vector<bool> &availableCores);
+    migration bigBigMigration(const std::vector<bool> &availableCores);
 
     int getColdestCore(const std::vector<bool> &availableCores);
     void logTemperatures(const std::vector<bool> &availableCores);
 
-    void bigBigMigration(const std::vector<bool> &availableCores)
 };
 #endif
