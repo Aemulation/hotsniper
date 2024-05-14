@@ -45,7 +45,8 @@ private:
         BIG_BIG_MIGRATION,
         BIG_SMALL_MIGRATION,
         ESTIMATION,
-        INIT
+        INIT,
+        DVFS
     };
 
     enum class BigSmallMigrationState {
@@ -58,8 +59,9 @@ private:
     enum class EstimationState {
         START,
         SMALLEST_AT_MAX,
-        BIGGEST_ARE_COLD,
         BIGGEST_AT_MAX,
+        DVFS,
+        DVFS_BIGGEST_AT_MAX,
         DONE
     };
 
@@ -75,17 +77,18 @@ private:
 
     int minFrequencyBig, maxFrequencyBig, minFrequencySmall, maxFrequencySmall;
 
-    SubsecondTime tMigStart, tMig, tHighestBig, tHighestSmall;
+    SubsecondTime tMigStart, tMig, tHighestSmall, tHighestBigStart, tHighestBig, tDVFSStart, tDVFSCycleStart;
     double fHighestBig, fHighestSmall, CPIHighestBig, CPIHighestSmall;
-    double nMig;
+    double nMig, nDVFS;
 
-    std::vector<int> fCores;
-    std::vector<int> tBigFreqs;
+    static std::vector<int> fCores;
+    std::vector<SubsecondTime> tBigFreqs;
     std::vector<int> CPIBig;
+    std::vector<int> fBig;
 
-    bool isBig(const int core);
-    std::vector<int> bigCores(const std::vector<bool> &availableCores);
-    std::vector<int> smallCores(const std::vector<bool> &availableCores);
+    bool isBig(const uint core);
+    std::vector<int> bigCores();
+    std::vector<int> smallCores();
 
     std::vector<migration> estimation(SubsecondTime time, const std::vector<bool> &availableCores);
     std::vector<migration> bigSmallMigration(const std::vector<bool> &availableCores);

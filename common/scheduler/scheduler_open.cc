@@ -372,6 +372,9 @@ void SchedulerOpen::initDVFSPolicy(String policyName) {
     std::cout << "Created asymmetric dvfs policy" << std::endl;
     dvfsPolicy = new DVFSAsymmetric(performanceCounters, coreRows, coreColumns,
                                     minFrequency, maxFrequency, frequencyStepSize, Sim()->getCfg()->getString("scheduler/open/dvfs/asymmetry"));
+  } else if(policyName == "funky") {
+    std::cout << "Created funky dvfs policy" << std::endl;
+    dvfsPolicy = new FunkyPolicy(performanceCounters, coreRows, coreColumns, Sim()->getCfg()->getFloat("scheduler/open/migration/funky/criticalTemperature"), minFrequency, maxFrequency, minFrequency / 2, maxFrequency / 2);
   } else {
     cout << "\n[Scheduler] [Error]: Unknown DVFS Algorithm" << endl;
     exit(1);

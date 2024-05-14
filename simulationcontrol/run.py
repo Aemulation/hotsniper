@@ -736,8 +736,8 @@ def funky_test():
     ):
         min_parallelism = get_feasible_parallelisms(benchmark)[0]
         max_parallelism = get_feasible_parallelisms(benchmark)[-1]
-        for cores in [2, 3, 4]:
-            for freq in (1, 2, 3, 4):
+        for cores in [2]:
+            for freq in [4]:
                 try:
                     run(
                         ["{:.1f}GHz".format(freq), "funky", "slowDVFS"],
