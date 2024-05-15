@@ -1,0 +1,10 @@
+CPI                  Core 0     Core 1     Core 2     Core 3   
+base                   0.37       0.38       0.00       0.38
+depend-fp              0.27       0.28       0.00       0.28
+issue-port2            0.06       0.06       0.00       0.06
+branch                 0.06       0.06       0.00       0.06
+mem-l3                 0.27       0.27       0.00       0.27
+sync-unscheduled        2.14       2.19     760.83       2.19
+other                  0.06       0.05       0.78       0.06
+
+total                  3.23       3.28     761.61       3.30
