@@ -4,8 +4,8 @@
      core
  * and migrates threads from hot cores to the coldest cores.
  */
-#ifndef __COLDESTCORE_H
-#define __COLDESTCORE_H
+#ifndef __FUNCKYPOLICY_H
+#define __FUNCKYPOLICY_H
 #include <vector>
 #include "mappingpolicy.h"
 #include "migrationpolicy.h"
@@ -52,7 +52,6 @@ private:
     enum class BigSmallMigrationState {
         START,
         SMALLEST_AT_MAX,
-        BIGGEST_ARE_COLD,
         DONE
     };
 
@@ -77,13 +76,14 @@ private:
 
     int minFrequencyBig, maxFrequencyBig, minFrequencySmall, maxFrequencySmall;
 
-    SubsecondTime tMigStart, tMig, tHighestSmall, tHighestBigStart, tHighestBig, tDVFSStart, tDVFSCycleStart;
+    SubsecondTime tMigStart, tMig, tHighestSmall, tHighestBigStart, tHighestBig, tDVFSStart, tDVFSCycleStart, tLastEstimation;
     double fHighestBig, fHighestSmall, CPIHighestBig, CPIHighestSmall;
     double nMig, nDVFS;
+    int measurements;
 
     static std::vector<int> fCores;
     std::vector<SubsecondTime> tBigFreqs;
-    std::vector<int> CPIBig;
+    std::vector<double> CPIBig;
     std::vector<int> fBig;
 
     bool isBig(const uint core);
@@ -94,7 +94,6 @@ private:
     std::vector<migration> bigSmallMigration(const std::vector<bool> &availableCores);
     migration bigBigMigration(const std::vector<bool> &availableCores);
 
-    int getColdestCore(const std::vector<bool> &availableCores);
     void logTemperatures(const std::vector<bool> &availableCores);
 
 };
