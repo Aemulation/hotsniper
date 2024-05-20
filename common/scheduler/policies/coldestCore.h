@@ -10,9 +10,9 @@
 
 #include "migrationpolicy.h"
 #include "performance_counters.h"
-class FunkyPolicy : public MappingPolicy, public MigrationPolicy {
+class ColdestCore : public MappingPolicy, public MigrationPolicy {
 public:
-    FunkyPolicy(
+    ColdestCore(
             const PerformanceCounters *performanceCounters,
             int coreRows,
             int coreColumns,

@@ -17,6 +17,7 @@
 #include "policies/dvfsTestStaticPower.h"
 #include "policies/dvfsAsymmetric.h"
 #include "policies/mapFirstUnused.h"
+#include "policies/coldestCore.h"
 #include "policies/funkyPolicy.h"
 
 #include <bits/stdc++.h>
@@ -127,6 +128,8 @@ struct systemCore {
 };
 
 vector<systemCore> systemCores;
+
+static FunkyPolicy *funkyPolicy;
 
 /** SchedulerOpen
     Constructor for Open Scheduler
@@ -298,11 +301,18 @@ SchedulerOpen::SchedulerOpen(ThreadManager *thread_manager)
     cout << "Pushing Task " << taskIterator << " to the waitingTaskQ" << endl;
   }
 
-  initMappingPolicy(Sim()->getCfg()->getString("scheduler/open/logic").c_str());
-  initDVFSPolicy(
-      Sim()->getCfg()->getString("scheduler/open/dvfs/logic").c_str());
-  initMigrationPolicy(
-      Sim()->getCfg()->getString("scheduler/open/migration/logic").c_str());
+  if(Sim()->getCfg()->getString("scheduler/open/logic") == "funky") {
+    funkyPolicy = new FunkyPolicy(performanceCounters, coreRows, coreColumns, Sim()->getCfg()->getFloat("scheduler/open/migration/funky/criticalTemperature"), minFrequency, maxFrequency, minFrequency / 2, maxFrequency / 2);
+    dvfsPolicy = funkyPolicy;
+    mappingPolicy = funkyPolicy;
+    migrationPolicy = funkyPolicy;
+  } else {
+    initMappingPolicy(Sim()->getCfg()->getString("scheduler/open/logic").c_str());
+    initDVFSPolicy(
+        Sim()->getCfg()->getString("scheduler/open/dvfs/logic").c_str());
+    initMigrationPolicy(
+        Sim()->getCfg()->getString("scheduler/open/migration/logic").c_str());
+  }
 }
 
 /** initMappingPolicy
@@ -328,7 +338,12 @@ void SchedulerOpen::initMappingPolicy(String policyName) {
   } else if (policyName == "funky") {
     float criticalTemperature = Sim()->getCfg()->getFloat("scheduler/open/migration/funky/criticalTemperature");
     mappingPolicy = new FunkyPolicy(performanceCounters, coreRows, coreColumns, criticalTemperature, minFrequency, maxFrequency, minFrequency / 2, maxFrequency / 2);
-  } // else if (policyName ="XYZ") {... } //Place to instantiate a new mapping
+  } else if (policyName == "coldestCore") {
+    float criticalTemperature = Sim()->getCfg()->getFloat("scheduler/open/migration/coldestCore/criticalTemperature");
+    mappingPolicy = new ColdestCore(performanceCounters, coreRows, coreColumns, criticalTemperature);
+  } 
+  
+  // else if (policyName ="XYZ") {... } //Place to instantiate a new mapping
     // logic. Implementation is put in "policies" package.
   else {
     cout << "\n[Scheduler] [Error]: Unknown Mapping Algorithm" << endl;
@@ -392,7 +407,12 @@ void SchedulerOpen::initMigrationPolicy(String policyName) {
     float criticalTemperature = Sim()->getCfg()->getFloat("scheduler/open/migration/funky/criticalTemperature");
     std::cout << "Creating funky migration policy" << std::endl;
     migrationPolicy = new FunkyPolicy(performanceCounters, coreRows, coreColumns, criticalTemperature, minFrequency, maxFrequency, minFrequency / 2, maxFrequency / 2);
-  } // else if (policyName ="XYZ") {... } //Place to instantiate a new migration
+  } else if (policyName == "coldestCore") {
+    float criticalTemperature = Sim()->getCfg()->getFloat("scheduler/open/migration/coldestCore/criticalTemperature");
+    migrationPolicy = new ColdestCore(performanceCounters, coreRows, coreColumns, criticalTemperature);
+  }
+  
+  // else if (policyName ="XYZ") {... } //Place to instantiate a new migration
     // logic. Implementation is put in "policies" package.
   else {
     cout << "\n[Scheduler] [Error]: Unknown Migration Algorithm" << endl;

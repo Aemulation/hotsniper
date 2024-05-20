@@ -3,7 +3,7 @@
 
 using namespace std;
 
-FunkyPolicy::FunkyPolicy(
+ColdestCore::ColdestCore(
         const PerformanceCounters *performanceCounters,
         int coreRows,
         int coreColumns,
@@ -14,7 +14,7 @@ FunkyPolicy::FunkyPolicy(
           criticalTemperature(criticalTemperature) {
 }
 
-std::vector<int> FunkyPolicy::map(
+std::vector<int> ColdestCore::map(
         String taskName,
         int taskCoreRequirement,
         const std::vector<bool> &availableCoresRO,
@@ -41,7 +41,7 @@ std::vector<int> FunkyPolicy::map(
     return cores;
 }
 
-std::vector<migration> FunkyPolicy::migrate(
+std::vector<migration> ColdestCore::migrate(
         SubsecondTime time,
         const std::vector<int> &taskIds,
         const std::vector<bool> &activeCores) {
@@ -83,7 +83,7 @@ std::vector<migration> FunkyPolicy::migrate(
 }
 
 
-int FunkyPolicy::getColdestCore(const std::vector<bool> &availableCores) {
+int ColdestCore::getColdestCore(const std::vector<bool> &availableCores) {
     int coldestCore = -1;
     float coldestTemperature = 0;
 
@@ -101,7 +101,7 @@ int FunkyPolicy::getColdestCore(const std::vector<bool> &availableCores) {
     return coldestCore;
 }
 
-void FunkyPolicy::logTemperatures(const std::vector<bool> &availableCores) {
+void ColdestCore::logTemperatures(const std::vector<bool> &availableCores) {
     cout << "[Scheduler][coldestCore-map]: temperatures of available cores:" << endl;
     for (int y = 0; y < coreRows; y++) {
         for (int x = 0; x < coreColumns; x++) {
@@ -109,12 +109,12 @@ void FunkyPolicy::logTemperatures(const std::vector<bool> &availableCores) {
                 cout << " ";
             }
             int coreId = y * coreColumns + x;
-            if (!availableCores.at(coreId)) {
-                cout << " - ";
-            } else {
+            // if (!availableCores.at(coreId)) {
+            //     cout << " - ";
+            // } else {
                 float temperature = performanceCounters->getTemperatureOfCore(coreId);
                 cout << fixed << setprecision(1) << temperature;
-            }
+            // }
         }
         cout << endl;
     }

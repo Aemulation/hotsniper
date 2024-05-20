@@ -46,20 +46,24 @@ std::vector<int> FunkyPolicy::map(
         int taskCoreRequirement,
         const std::vector<bool> &availableCoresRO,
         const std::vector<bool> &activeCores) {
-
     std::vector<int> cores;
     std::vector<int> bCores = bigCores();
     std::vector<int> sCores = smallCores();
 
     std::cout << "Requirement " << taskCoreRequirement << std::endl;
 
+    static int cur = 0;
+
     for (uint i = 0; i < taskCoreRequirement; i++) {
+        int core = cur % bCores.size();
         if(i >= bCores.size()){
             std::vector<int> empty;
             return empty;
         } else {
-            FUNKY_PRINT << "Core " << bCores.at(i) << " is available and big" << std::endl;
-            cores.push_back(bCores.at(i));
+            FUNKY_PRINT << core << " " << bCores.size() << std::endl;
+            FUNKY_PRINT << "Core " << bCores.at(core) << " is available and big" << std::endl;
+            cores.push_back(bCores.at(core));
+            cur++;
         }
     }
 
@@ -101,6 +105,7 @@ std::vector<migration> FunkyPolicy::migrate(
                 FUNKY_PRINT << "Big cores are hot, but no cold big cores found. Entering cooling phase." << std::endl;
 
                 if(time - tLastEstimation > SubsecondTime::MS(100) || nMig < 0){
+                    FUNKY_PRINT << "Starting estimation phase" << std::endl;
                     state = State::ESTIMATION;
                     estimationState = EstimationState::START;
                 } else {
@@ -299,7 +304,7 @@ std::vector<migration> FunkyPolicy::estimation(SubsecondTime time, const std::ve
 
         for(int c : bCores){
             fCores.at(c) = maxFrequencyBig;
-            FUNKY_PRINT << "Core S" << c << " set to " << maxFrequencyBig << " MHz" << std::endl;
+            FUNKY_PRINT << "Core B" << c << " set to " << maxFrequencyBig << " MHz" << std::endl;
         }
 
         tHighestBigStart = time;
@@ -343,6 +348,7 @@ std::vector<migration> FunkyPolicy::estimation(SubsecondTime time, const std::ve
                 CPIHighestSmall = 0;
 
                 FUNKY_PRINT << "Entering DVFS estimation phase" << std::endl;
+                goto estimationFinal;
             }
         }
     } else if(estimationState == EstimationState::DVFS){

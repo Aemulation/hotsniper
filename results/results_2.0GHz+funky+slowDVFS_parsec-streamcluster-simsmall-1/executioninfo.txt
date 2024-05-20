@@ -1,0 +1,5 @@
+started:    2024-05-19 23:07:17
+ended:      2024-05-19 23:43:24
+duration:   0:36:06.758085
+host:       6a9a262250fe
+tasks:      parsec-streamcluster-simsmall-1

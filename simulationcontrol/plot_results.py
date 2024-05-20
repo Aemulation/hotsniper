@@ -128,7 +128,9 @@ def make_coldest_core_plot(header):
 
   # get the same tests but without coldest core
   filtered_configs = [d[config_index] for d in filtered_data]
-  filtered_data_no_coldest = [d for d in data if d[filter_index] == '2.0GHz+maxFreq+slowDVFS' and d[config_index] in filtered_configs]
+  #filtered_data_no_coldest = [d for d in data if d[filter_index] == '2.0GHz+maxFreq+slowDVFS' and d[config_index] in filtered_configs]
+  #jfiltered_data_no_coldest = [d for d in data if d[filter_index] == '3.0GHz+maxFreq+slowDVFS' and d[config_index] in filtered_configs]
+  filtered_data_no_coldest = [d for d in data if d[filter_index] == '4.0GHz+maxFreq+slowDVFS' and d[config_index] in filtered_configs]
 
   data = {}
   for d in filtered_data:
@@ -140,7 +142,9 @@ def make_coldest_core_plot(header):
       ('on', d[header_index]),
     ]
   
-  plot_results(data, 'coldest core', header, '2.0GHz+maxFreq+slowDVFS+coldestCore+4')
+  #plot_results(data, 'coldest core', header, '2.0GHz+maxFreq+slowDVFS+coldestCore+4')
+  #plot_results(data, 'coldest core', header, '3.0GHz+maxFreq+slowDVFS+coldestCore+4')
+  plot_results(data, 'coldest core', header, '4.0GHz+maxFreq+slowDVFS+coldestCore+4')
 
 
 # make_cores_plot('avg resp time (ns)', '1.0GHz+maxFreq+slowDVFS')
@@ -188,6 +192,19 @@ def make_coldest_core_plot(header):
 # make_freq_plot('sim. time (ns)', 'maxFreq+slowDVFS', '3')
 # make_freq_plot('sim. time (ns)', 'maxFreq+slowDVFS', '4')
 
+#######################
+### New coldest core
+#######################
+make_freq_plot('avg resp time (ns)', 'maxFreq+slowDVFS+coldestCore+2arrivals', '1')
+make_freq_plot('avg power (W)', 'maxFreq+slowDVFS+coldestCore+2arrivals', '1')
+make_freq_plot('energy (J)', 'maxFreq+slowDVFS+coldestCore+2arrivals', '1')
+make_freq_plot('peak temperature (C)', 'maxFreq+slowDVFS+coldestCore+2arrivals', '1')
+make_freq_plot('sim. time (ns)', 'maxFreq+slowDVFS+coldestCore+2arrivals', '1')
+make_coldest_core_plot('avg resp time (ns)')
+make_coldest_core_plot('avg power (W)')
+make_coldest_core_plot('energy (J)')
+make_coldest_core_plot('peak temperature (C)')
+make_coldest_core_plot('sim. time (ns)')
 
 '''
 make_multiprogram_plot('avg resp time (ns)')
