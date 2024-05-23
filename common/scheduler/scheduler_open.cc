@@ -19,6 +19,7 @@
 #include "policies/mapFirstUnused.h"
 #include "policies/coldestCore.h"
 #include "policies/funkyPolicy.h"
+#include "policies/crankyPolicy.h"
 
 #include <bits/stdc++.h>
 #include <iomanip>
@@ -306,6 +307,11 @@ SchedulerOpen::SchedulerOpen(ThreadManager *thread_manager)
     dvfsPolicy = funkyPolicy;
     mappingPolicy = funkyPolicy;
     migrationPolicy = funkyPolicy;
+  } else if(Sim()->getCfg()->getString("scheduler/open/logic") == "cranky"){
+    CrankyPolicy* crankyPolicy = new CrankyPolicy(performanceCounters, coreRows, coreColumns, minFrequency, maxFrequency, Sim()->getCfg()->getInt("scheduler/open/migration/cranky/maxTemperature"));
+    dvfsPolicy = crankyPolicy;
+    mappingPolicy = crankyPolicy;
+    migrationPolicy = crankyPolicy;
   } else {
     initMappingPolicy(Sim()->getCfg()->getString("scheduler/open/logic").c_str());
     initDVFSPolicy(

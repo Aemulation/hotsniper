@@ -909,6 +909,41 @@ def coldest_core_multiprogram_test():
             except:
                 print('Big L')
 
+def neural_test():
+    for benchmark in (
+        "parsec-blackscholes",
+        # "parsec-x264",
+        # "parsec-bodytrack",
+        # "parsec-canneal",
+        # "parsec-dedup",
+        # "parsec-fluidanimate",
+        # "parsec-streamcluster",
+        # "parsec-swaptions",
+        #'splash2-barnes',
+        #'splash2-fmm',
+        #'splash2-ocean.cont',
+        #'splash2-ocean.ncont',
+        #'splash2-radiosity',
+        #'splash2-raytrace',
+        #'splash2-water.nsq',
+        #'splash2-water.sp',
+        #'splash2-cholesky',
+        #'splash2-fft',
+        #'splash2-lu.cont',
+        #'splash2-lu.ncont',
+        #'splash2-radix',
+    ):
+        min_parallelism = get_feasible_parallelisms(benchmark)[0]
+        max_parallelism = get_feasible_parallelisms(benchmark)[-1]
+        for cores in [4]:
+            for freq in [4]:
+                try:
+                    run(
+                        ["{:.1f}GHz".format(freq), "maxFreq", "fastDVFS", "cranky"],
+                        get_instance(benchmark, cores, input_set="simsmall"),
+                    )
+                except:
+                    print("Big L")
 
 def main():
     # example()
@@ -922,13 +957,13 @@ def main():
     # dvfs_test()
     # dvfs_symmetric_fast_test()
     # dvfs_symmetric_slow_test()
-    funky_test()
-    funky_multiprogram_test()
-    funky_test2()
-    coldest_core_test()
-    coldest_core_multiprogram_test()
-    coldest_core_test2()
-
+    # funky_test()
+    # funky_multiprogram_test()
+    # funky_test2()
+    # coldest_core_test()
+    # coldest_core_multiprogram_test()
+    # coldest_core_test2()
+    neural_test()
 
 if __name__ == "__main__":
     main()
