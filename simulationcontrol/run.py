@@ -100,7 +100,6 @@ def save_output(
 
     create_plots(run)
 
-
 def run(base_configuration, benchmark, ignore_error=False):
     benchmark_text = benchmark
     if len(benchmark_text) > 100:
@@ -740,7 +739,7 @@ def funky_test():
             for freq in [4, 2]:
                 try:
                     run(
-                        ["{:.1f}GHz".format(freq), "funky", "slowDVFS"],
+                        ["{:.1f}GHz".format(freq), "funky", "fastDVFS"],
                         get_instance(benchmark, cores, input_set="simsmall"),
                     )
                 except:
@@ -776,7 +775,7 @@ def funky_test2():
             for freq in [3]:
                 try:
                     run(
-                        ["{:.1f}GHz".format(freq), "funky", "slowDVFS"],
+                        ["{:.1f}GHz".format(freq), "funky", "fastDVFS"],
                         get_instance(benchmark, cores, input_set="simsmall"),
                     )
                 except:
@@ -803,7 +802,7 @@ def funky_multiprogram_test():
                             benchmark, min_parallelism, input_set="simsmall"
                         )
                 run(
-                    ["{:.1f}GHz".format(freq), "funky", "slowDVFS", "{}arrivals".format(cores)],
+                    ["{:.1f}GHz".format(freq), "funky", "fastDVFS", "{}arrivals".format(cores)],
                     benchmarks,
                 )
             except:
@@ -839,7 +838,7 @@ def coldest_core_test():
             for freq in [2, 4]:
                 try:
                     run(
-                        ["{:.1f}GHz".format(freq), "maxFreq", "slowDVFS", "coldestCore"],
+                        ["{:.1f}GHz".format(freq), "maxFreq", "fastDVFS", "coldestCore"],
                         get_instance(benchmark, cores, input_set="simsmall"),
                     )
                 except:
@@ -875,7 +874,7 @@ def coldest_core_test2():
             for freq in [3]:
                 try:
                     run(
-                        ["{:.1f}GHz".format(freq), "maxFreq", "slowDVFS", "coldestCore"],
+                        ["{:.1f}GHz".format(freq), "maxFreq", "fastDVFS", "coldestCore"],
                         get_instance(benchmark, cores, input_set="simsmall"),
                     )
                 except:
@@ -903,7 +902,7 @@ def coldest_core_multiprogram_test():
                             benchmark, min_parallelism, input_set="simsmall"
                         )
                 run(
-                    ["{:.1f}GHz".format(freq), "maxFreq", "slowDVFS", "coldestCore", "{}arrivals".format(cores)],
+                    ["{:.1f}GHz".format(freq), "maxFreq", "fastDVFS", "coldestCore", "{}arrivals".format(cores)],
                     benchmarks,
                 )
             except:
@@ -912,13 +911,13 @@ def coldest_core_multiprogram_test():
 def neural_test():
     for benchmark in (
         "parsec-blackscholes",
-        # "parsec-x264",
-        # "parsec-bodytrack",
-        # "parsec-canneal",
-        # "parsec-dedup",
-        # "parsec-fluidanimate",
-        # "parsec-streamcluster",
-        # "parsec-swaptions",
+        "parsec-x264",
+        "parsec-bodytrack",
+        "parsec-canneal",
+        "parsec-dedup",
+        "parsec-fluidanimate",
+        "parsec-streamcluster",
+        "parsec-swaptions",
         #'splash2-barnes',
         #'splash2-fmm',
         #'splash2-ocean.cont',
@@ -936,7 +935,7 @@ def neural_test():
         min_parallelism = get_feasible_parallelisms(benchmark)[0]
         max_parallelism = get_feasible_parallelisms(benchmark)[-1]
         for cores in [4]:
-            for freq in [4]:
+            for freq in [4, 2, 3]:
                 try:
                     run(
                         ["{:.1f}GHz".format(freq), "maxFreq", "fastDVFS", "cranky"],
@@ -944,6 +943,43 @@ def neural_test():
                     )
                 except:
                     print("Big L")
+
+def neural_multiprogram_test():
+    benchmark_set = [
+        'parsec-x264',
+        'parsec-x264',
+    ]
+
+    for cores in [2]:
+        for freq in [4, 2, 3]:
+            try:
+                benchmarks = ""
+                for i, benchmark in enumerate(benchmark_set[:cores]):
+                    min_parallelism = get_feasible_parallelisms(benchmark)[0]
+                    if i != 0:
+                        benchmarks = (
+                            benchmarks + "," + get_instance(benchmark, min_parallelism, input_set="simsmall")
+                        )
+                    else:
+                        benchmarks = benchmarks + get_instance(
+                            benchmark, min_parallelism, input_set="simsmall"
+                        )
+                run(
+                    ["{:.1f}GHz".format(freq), "maxFreq", "fastDVFS", "cranky", "{}arrivals".format(cores)],
+                    benchmarks,
+                )
+            except:
+                print('Big L')
+
+
+def plots(base_configuration, benchmark):
+    benchmark_text = benchmark
+    if len(benchmark_text) > 100:
+        benchmark_text = benchmark_text[:100] + "__etc"
+
+    run = "results_{}_{}".format("+".join(base_configuration), benchmark_text)
+
+    create_plots(run)
 
 def main():
     # example()
@@ -957,13 +993,14 @@ def main():
     # dvfs_test()
     # dvfs_symmetric_fast_test()
     # dvfs_symmetric_slow_test()
-    # funky_test()
-    # funky_multiprogram_test()
-    # funky_test2()
+    neural_test()
+    neural_multiprogram_test()
+    funky_test()
+    funky_multiprogram_test()
+    funky_test2()
     # coldest_core_test()
     # coldest_core_multiprogram_test()
     # coldest_core_test2()
-    neural_test()
 
 if __name__ == "__main__":
     main()

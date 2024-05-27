@@ -27,14 +27,20 @@ std::vector<int> CrankyPolicy::map(
         const std::vector<bool> &availableCores,
         const std::vector<bool> &activeCores)
 {
-    std::vector<int> taskCoreMapping(taskCoreRequirement, -1);
+    std::vector<int> cores(taskCoreRequirement, -1);
 
-    // Find the first available core
-    for (int i = 0; i < taskCoreRequirement; i++) {
-        taskCoreMapping.push_back(i);
+    for (int i = 0; i < coreColumns * coreRows; i++) {
+        if(availableCores.at(i)){
+            cores.push_back(i);
+            taskCoreRequirement--;
+
+            if(taskCoreRequirement == 0){
+                break;
+            }
+        }
     }
 
-    return taskCoreMapping;
+    return cores;
 }
 
 std::vector<migration> CrankyPolicy::migrate(
@@ -66,7 +72,7 @@ std::vector<int> CrankyPolicy::getFrequencies(
         if(performanceCounters->getTemperatureOfCore(c) > maxTemperature + 20){
             coolingDown.at(c) = true;
             newFrequencies.at(c) = minFrequency;
-        } else if(performanceCounters->getTemperatureOfCore(c) < maxTemperature - 10){
+        } else if(performanceCounters->getTemperatureOfCore(c) < maxTemperature + 10){
             coolingDown.at(c) = false;
         }
     }
@@ -74,17 +80,16 @@ std::vector<int> CrankyPolicy::getFrequencies(
     if(first) {
         first = false;
     } else {
-        CRANKY_PRINT << "Doing backprop" << std::endl;
-
         for(int c = 0; c < coreColumns * coreRows; c++) {
             if(coolingDown.at(c)){
                 continue;
             }
 
             double targetFrequency = ((double)oldFrequencies[c] - minFrequency) / (maxFrequency - minFrequency);
+            // Take 1 from the temperature because the AI tends to swing a tiny bit
+            targetFrequency = (maxTemperature - 1) / performanceCounters->getTemperatureOfCore(c) * targetFrequency;
 
             // if(performanceCounters->getTemperatureOfCore(c) > maxTemperature){
-                targetFrequency = maxTemperature / performanceCounters->getTemperatureOfCore(c) * targetFrequency;
             // } else {
             //     targetFrequency += (1.0 - targetFrequency) / 2;
             // }
@@ -112,8 +117,8 @@ std::vector<int> CrankyPolicy::getFrequencies(
             ((double)performanceCounters->getFreqOfCore(c) - minFrequency) / (maxFrequency - minFrequency),
             performanceCounters->getTemperatureOfCore(c) / maxTemperature,
             (performanceCounters->getTemperatureOfCore(c) - oldTemps.at(c)) / maxTemperature,
-            (performanceCounters->getTemperatureOfCore(c) - oldTemps1.at(c)) / maxTemperature,
-            (performanceCounters->getTemperatureOfCore(c) - oldTemps2.at(c)) / maxTemperature
+            (oldTemps.at(c) - oldTemps1.at(c)) / maxTemperature,
+            (oldTemps1.at(c) - oldTemps2.at(c)) / maxTemperature
         };
 
         CRANKY_PRINT << "Inputs: " << inputVals.at(0) << " " << inputVals.at(1) << " " << inputVals.at(2) << std::endl;

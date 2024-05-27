@@ -289,12 +289,12 @@ def create_plots(run, force_recreate=False):
             y_label='Power (W)')
 
     # R-value plots
-    if get_config_val_bool(run, 'reliability/enabled'):
-        full_name = get_file(run, 'PeriodicRvalue.log')
-        periodic_plot.plot_periodic_log(full_name, core_level=False,
-                y_label='R-value')
-        periodic_plot.plot_periodic_log(full_name, core_level=True,
-                atype='min', y_label='R-value')
+    # if get_config_val_bool(run, 'reliability/enabled'):
+    #     full_name = get_file(run, 'PeriodicRvalue.log')
+    #     periodic_plot.plot_periodic_log(full_name, core_level=False,
+    #             y_label='R-value')
+    #     periodic_plot.plot_periodic_log(full_name, core_level=True,
+    #             atype='min', y_label='R-value')
 
     plot_trace(run, 'frequency', 'Frequency', 'Frequency (GHz)', lambda: get_freq_traces(run), active_cores, yMin=0, yMax=4.1e9, force_recreate=force_recreate)
     plot_trace(run, 'peak_temperature', 'Peak Temperature', 'Temperature (C)', lambda: get_peak_temperature_traces(run), [0], yMin=45, yMax=100, force_recreate=force_recreate)

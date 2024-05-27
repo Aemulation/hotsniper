@@ -1,0 +1,5 @@
+started:    2024-05-24 12:38:29
+ended:      2024-05-24 15:17:09
+duration:   2:38:39.158349
+host:       6a9a262250fe
+tasks:      parsec-dedup-simsmall-1
